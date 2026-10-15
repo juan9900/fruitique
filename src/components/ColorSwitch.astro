@@ -18,8 +18,8 @@
   }));
 </script>
 <style>
-  .cs { position: fixed; right: 1rem; bottom: 1rem; z-index: 50; display: flex; gap: .5rem; padding: .4rem; background: var(--fq-white); border-radius: var(--radius-pill); box-shadow: 0 6px 18px rgb(0 0 0 / .3); }
-  .cs button { width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 3px solid var(--fq-white); background: var(--c); cursor: pointer; box-shadow: 0 0 0 2px rgb(0 0 0 / .15); }
+  .cs { position: fixed; right: .6rem; bottom: calc(.6rem + env(safe-area-inset-bottom)); z-index: 50; display: flex; gap: .5rem; padding: .4rem; background: var(--fq-white); border-radius: var(--radius-pill); box-shadow: 0 6px 18px rgb(0 0 0 / .3); }
+  .cs button { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 3px solid var(--fq-white); background: var(--c); cursor: pointer; box-shadow: 0 0 0 2px rgb(0 0 0 / .15); }
   .cs button[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--fq-ink); }
   .cs button:focus-visible { outline: 3px solid var(--fq-ink); outline-offset: 2px; }
 </style>
