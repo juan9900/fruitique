@@ -11,7 +11,7 @@ maplibregl.setWorkerUrl(workerUrl);
 export { maplibregl };
 
 export const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-export const RED = css('--fq-ui'), YELLOW = css('--fq-yellow'), PURPLE = css('--fq-purple');
+export const RED = css('--fq-red'), YELLOW = css('--fq-yellow'), PURPLE = css('--fq-purple');
 
 export const STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
 const INK = css('--fq-ink'), CREAM = css('--fq-cream'), TURQ = css('--fq-turquoise');

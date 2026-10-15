@@ -8,7 +8,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 const c = story[locale];
 const colors = ['var(--fq-turquoise)', 'var(--fq-yellow)', 'var(--fq-purple)'];
-const inks = ['var(--fq-ink)', 'var(--fq-ui)', 'var(--fq-white)'];
+const inks = ['var(--fq-ink)', 'var(--fq-red)', 'var(--fq-white)'];
 const packs = [flavorMedia.strawberry.pack!, productMedia['square-bars'].pack!, flavorMedia['passion-fruit'].pack!];
 ---
 <BaseLayout locale={locale} title={`${c.title} — Fruitique`} description={c.metaDesc} alternates={{ en: localePath('story', 'en'), es: localePath('story', 'es') } as Record<Locale, string>}>
@@ -51,11 +51,11 @@ const packs = [flavorMedia.strawberry.pack!, productMedia['square-bars'].pack!, 
   </section>
 </BaseLayout>
 <style>
-  .story-hero { background: var(--fq-ui); color: var(--fq-white); padding-block: clamp(4rem, 12vw, 9rem); }
+  .story-hero { background: var(--fq-red); color: var(--fq-white); padding-block: clamp(4rem, 12vw, 9rem); }
   h1 { font-size: clamp(2.6rem, 8.5vw, 6.5rem); max-width: 16ch; margin: 0; }
   h1 em { font-style: normal; color: var(--fq-yellow); }
   .manifesto { background: var(--fq-cream); padding-block: clamp(4rem, 12vw, 9rem); }
-  .manifesto p { font: 700 clamp(1.7rem, 4.4vw, 3.2rem)/1.2 var(--font-display); color: var(--fq-ui); max-width: 26ch; margin: 0; }
+  .manifesto p { font: 700 clamp(1.7rem, 4.4vw, 3.2rem)/1.2 var(--font-display); color: var(--fq-red); max-width: 26ch; margin: 0; }
   :global(.motion-ok) .manifesto [data-rise-lines] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
   .photo figure { margin: 0; overflow: hidden; aspect-ratio: 16 / 9; max-height: 80svh; }
   .photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
@@ -89,7 +89,7 @@ const packs = [flavorMedia.strawberry.pack!, productMedia['square-bars'].pack!, 
     .pillars[data-layout='stagger'] .pillar__in { grid-template-columns: 1.1fr 1fr; gap: 1rem; }
     .pillars[data-layout='stagger'] .pillar :global(.pillar__pack) { width: min(30vw, 21rem); }
   }
-  .closing { position: relative; background: var(--fq-ui); color: var(--fq-white); text-align: center; padding-block: clamp(4rem, 12vw, 8rem); overflow: clip; }
+  .closing { position: relative; background: var(--fq-red); color: var(--fq-white); text-align: center; padding-block: clamp(4rem, 12vw, 8rem); overflow: clip; }
   .closing h2 { font-size: clamp(2.2rem, 7vw, 5rem); margin-bottom: 1.5rem; }
   :global(.motion-ok) .closing [data-split-words] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
 </style>

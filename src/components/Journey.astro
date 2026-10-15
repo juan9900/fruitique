@@ -35,15 +35,15 @@ const d = 'M50 0 C 62 8, 38 17, 50 25 S 62 42, 50 50 S 38 67, 50 75 S 62 92, 50 
 
 <style>
   .journey { background: var(--fq-cream); padding-block: clamp(3.5rem, 9vw, 7rem); overflow: clip; }
-  .big { margin: 0; font: 800 clamp(1.9rem, 6vw, 4.6rem)/1.05 var(--font-display); color: var(--fq-ui); }
+  .big { margin: 0; font: 800 clamp(1.9rem, 6vw, 4.6rem)/1.05 var(--font-display); color: var(--fq-red); }
   .small { margin: .7rem 0 0; font-size: 1.05rem; max-width: 30rem; }
   @media (min-width: 52rem) { .small { font-size: 1.15rem; } }
   @media (max-width: 51.99rem) { .step__text { text-align: center; justify-self: center; } .small { margin-inline: auto; } }
-  .small a { font-weight: 700; color: var(--fq-ui); text-underline-offset: .25em; white-space: nowrap; }
+  .small a { font-weight: 700; color: var(--fq-red); text-underline-offset: .25em; white-space: nowrap; }
   .path { position: relative; }
   .path__line { display: none; }
   @media (min-width: 52rem) { .path__line { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; } }
-  .path__track, .path__run { fill: none; stroke: var(--fq-ui); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-width: 6; }
+  .path__track, .path__run { fill: none; stroke: var(--fq-red); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-width: 6; }
   .path__track { opacity: .16; }
   /* tramo rojo: un pedazo corto de la línea (dash en px de pantalla) que JS desplaza a lo largo del camino; sin JS no se ve */
   .path__run { stroke-dasharray: 0 99999; }
