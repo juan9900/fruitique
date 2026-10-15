@@ -52,4 +52,10 @@ const crumbs = {
   .cards { padding-block: 1.5rem clamp(3rem, 8vw, 6rem); }
   .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
   .grid.products { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+  @media (max-width: 40rem) {
+    .grid.flavors { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+    .grid.flavors :global(.label) { padding: .7rem .8rem .85rem; }
+    .grid.flavors :global(.name) { font-size: 1.15rem; }
+    .grid.flavors :global(.go) { font-size: .8rem; }
+  }
 </style>

@@ -255,6 +255,10 @@ const crumbs = {
   @media (min-width: 52rem) { .page-hero[data-kind='products'] .grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3rem; } }
   .page-hero[data-kind='products'] .stage { min-width: 0; }
   .page-hero[data-kind='products'] .stage :global(.art.real) { width: 100%; max-width: 32rem; max-height: 60svh; }
+  @media (max-width: 51.99rem) {
+    .stage :global(.art.real) { width: min(100%, 24rem); max-height: 44svh; }
+    .page-hero[data-kind='products'] .stage :global(.art.real) { width: 100%; max-width: 20rem; max-height: 38svh; }
+  }
   .pick { padding-block: clamp(3rem, 8vw, 5.5rem); }
   .pick h2 { font-size: clamp(1.8rem, 4vw, 3rem); color: var(--fq-red); margin: 0 0 1.5rem; }
   .pick__grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
