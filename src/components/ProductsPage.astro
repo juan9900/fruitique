@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { productMedia } from '../data/media';
+import { flavors, flavorSlug } from '../data/flavors';
+import { products, productSlug } from '../data/products';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+/** /products/: una banda por línea, con el producto grande, sus sabores enlazados y el paso siguiente (encontrarlo). */
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const other: Locale = locale === 'en' ? 'es' : 'en';
+const base = (l: Locale) => localePath('products', l);
+const title = t('products.title');
+const lead = t('products.lead');
+const metaTitle = locale === 'en'
+  ? 'Fruitique products — popsicles, SquareBars, pints and ice cream sandwiches'
+  : 'Productos Fruitique — paletas, SquareBars, pints y sándwiches de helado';
+const flavorLead = locale === 'en' ? 'Flavors' : 'Sabores';
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fruitique', item: new URL(localePath('home', locale), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: t('nav.products'), item: new URL(base(locale), Astro.site).href },
+  ],
+};
+const lines = products.map((p) => {
+  const m = productMedia[p.slug];
+  const packs = (m.packs ?? (m.pack ? [m.pack] : [])).slice(0, p.kind === 'squarebar' ? 1 : 3);
+  return {
+    p,
+    packs,
+    href: `${base(locale)}${productSlug(p, locale)}/`,
+    desc: locale === 'en' ? p.descEn : p.descEs,
+    notes: locale === 'en' ? p.notesEn : p.notesEs,
+    flavors: p.flavors.map((f) => { const fl = flavors.find((x) => x.slug === f.slug)!; return { name: f.label ?? fl[locale], href: `${localePath('flavors', locale)}${flavorSlug(fl, locale)}/` }; }),
+  };
+});
+---
+<BaseLayout locale={locale} title={metaTitle} description={lead} alternates={{ en: base('en'), es: base('es') } as Record<Locale, string>} jsonLd={[crumbs]}>
+  <section class="intro">
+    <div class="container intro__grid">
+      <h1 data-split>{title}</h1>
+      <p class="lead" data-hero-fade>{lead}</p>
+    </div>
+    <div class="stripes" aria-hidden="true"><i></i><i></i><i></i></div>
+  </section>
+  {lines.map((l, i) => (
+    <section class={`band band--${l.p.kind}`} style={`--bg:${l.p.bg};--ink:${l.p.ink}`} aria-labelledby={`l-${l.p.slug}`}>
+      <div class={`container band__grid${i % 2 ? ' flip' : ''}`}>
+        <div class="art" data-reveal>
+          {l.packs.map((img, k) => (
+            <Image src={img} alt={k === 0 ? `Fruitique ${l.p.en}` : ''} class={`pack pack--${k}`} widths={[320, 520, 800]} sizes="(min-width: 62rem) 24rem, 80vw" loading="eager" />
+          ))}
+        </div>
+        <div class="copy">
+          <h2 id={`l-${l.p.slug}`} data-reveal>{l.p[locale]}</h2>
+          <p class="desc" data-reveal>{l.desc}</p>
+          <p class="notes" data-reveal>{l.p.size} · {l.notes}</p>
+          <p class="flavs" data-reveal>{flavorLead}: {l.flavors.map((f, k) => (<><a href={f.href}>{f.name}</a>{k < l.flavors.length - 1 ? ', ' : '.'}</>))}</p>
+          <div class="actions" data-reveal>
+            <a class="btn btn--main" href={l.href}>{locale === 'en' ? `See ${l.p.en}` : `Ver ${l.p.es}`}</a>
+            <a class="btn btn--ghost" href={localePath('whereToBuy', locale)}>{t('cta.find')}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+</BaseLayout>
+<style>
+  .intro { background: var(--fq-cream); padding-top: clamp(2.5rem, 6vw, 4.5rem); overflow: clip; }
+  .intro__grid { display: grid; gap: 1rem; padding-bottom: clamp(2rem, 4vw, 3rem); }
+  .intro h1 { font-size: clamp(2.6rem, 7vw, 4.8rem); line-height: 1.08; max-width: 16ch; letter-spacing: -.02em; color: var(--fq-red); margin: 0; }
+  .lead { font-size: 1.2rem; max-width: 38rem; margin: 0; }
+  .stripes { display: grid; grid-template-columns: repeat(3, 1fr); height: clamp(.9rem, 2.2vw, 1.6rem); }
+  .stripes i:nth-child(1) { background: var(--fq-yellow); }
+  .stripes i:nth-child(2) { background: var(--fq-turquoise); }
+  .stripes i:nth-child(3) { background: var(--fq-purple); }
+  .band { background: var(--bg); color: var(--ink); padding-block: clamp(3rem, 8vw, 6rem); overflow: clip; }
+  .band__grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 52rem) {
+    .band__grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .band__grid.flip .art { order: 2; }
+  }
+  .art { position: relative; display: grid; place-items: center; min-height: 18rem; }
+  .art :global(.pack) { height: auto; width: min(100%, 24rem); object-fit: contain; filter: drop-shadow(0 22px 14px rgb(0 0 0 / .25)); }
+  /* varios empaques de la línea: el primero manda; los demás se asoman detrás a los lados */
+  .art :global(.pack--0) { position: relative; z-index: 2; }
+  /* paletas y pints: el empaque principal va al fondo y los demás lo tapan un poco */
+  .band--popsicle .art :global(.pack--0), .band--pint .art :global(.pack--0) { z-index: 0; }
+  .band--popsicle .art :global(.pack--1), .band--popsicle .art :global(.pack--2), .band--pint .art :global(.pack--1), .band--pint .art :global(.pack--2) { z-index: 1; }
+  .art :global(.pack--1), .art :global(.pack--2) { position: absolute; width: 46%; z-index: 1; }
+  .art :global(.pack--1) { left: -2%; bottom: 4%; rotate: -9deg; }
+  .art :global(.pack--2) { right: -2%; bottom: 4%; rotate: 9deg; }
+  /* barras: solo el trío, centrado */
+  .band--squarebar .art :global(.pack--0) { width: min(100%, 30rem); }
+  .band--sandwich .art :global(.pack--0) { width: min(100%, 26rem); }
+  .band--sandwich .art :global(.pack--1) { position: relative; width: min(80%, 20rem); left: auto; bottom: auto; rotate: 4deg; margin-top: -1rem; }
+  .copy h2 { margin: 0 0 .5rem; font: 800 clamp(2.4rem, 6vw, 4.4rem)/1.05 var(--font-display); }
+  .desc { font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 30rem; margin: 0 0 1rem; }
+  .notes { margin: 0 0 1rem; font-size: 1rem; opacity: .9; }
+  .flavs { margin: 0 0 1.75rem; max-width: 34rem; font-size: 1.05rem; line-height: 1.6; }
+  .flavs a { color: inherit; font-weight: 700; text-underline-offset: .22em; }
+  .flavs a:hover, .flavs a:focus-visible { text-decoration-thickness: 3px; }
+  .actions { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; }
+  .btn--main { background: var(--ink); color: var(--bg); }
+  .btn--ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px currentColor; }
+</style>

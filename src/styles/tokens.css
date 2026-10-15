@@ -1,0 +1,31 @@
+/* Tokens de marca — docs/MANUAL-DE-MARCA.md §4-5. No usar colores fuera de esta paleta. */
+/* Fuentes de marca (licencia confirmada por el usuario). */
+@font-face { font-family: 'Como'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/Como-400.woff2') format('woff2'); }
+@font-face { font-family: 'Como'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/Como-700.woff2') format('woff2'); }
+@font-face { font-family: 'Como'; font-weight: 800; font-style: normal; font-display: swap; src: url('/fonts/Como-800.woff2') format('woff2'); }
+@font-face { font-family: 'Rude Slab'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/RudeSlab-700.woff2') format('woff2'); }
+@font-face { font-family: 'Rude Slab'; font-weight: 700; font-style: italic; font-display: swap; src: url('/fonts/RudeSlab-700-italic.woff2') format('woff2'); }
+
+:root {
+  --fq-red: #ed1d24;
+  --fq-yellow: #ffd400;
+  --fq-cream: #ffead5;
+  --fq-turquoise: #27bdbe;
+  --fq-purple: #93288d;
+  --fq-white: #ffffff;
+  --fq-coconut: #8a5a33; /* marrón coco: texto sobre blanco (AA) y detalles del sabor Coco */
+  --fq-coconut-light: #c9a27a;
+  --fq-tamarind: #7a4a26; /* marrón tamarindo (fondo) */
+  --fq-leaf: #9bd84e; /* verde del sabor Tamarindo, solo detalles */
+  --fq-ink: #2a0a0b; /* texto oscuro derivado del rojo, para fondos claros/amarillos */
+
+  /* Tipografía: Como (display), Rude Slab (acento), Poppins (texto) */
+  --font-display: 'Como', 'Poppins', system-ui, sans-serif;
+  --font-accent: 'Rude Slab', 'Poppins', Georgia, serif;
+  --font-body: 'Poppins', system-ui, sans-serif;
+
+  --radius: 1rem;
+  --radius-pill: 999px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --max-width: 72rem;
+}

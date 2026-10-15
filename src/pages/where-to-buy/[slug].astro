@@ -1,0 +1,10 @@
+---
+import LocationPage from "../../components/LocationPage.astro";
+import { cities, retailers } from "../../data/locations";
+export function getStaticPaths() {
+  return [...cities, ...retailers].map((g) => ({ params: { slug: g.slug }, props: { kind: "name" in g ? "retailer" : "city" } }));
+}
+const { slug } = Astro.params;
+const { kind } = Astro.props;
+---
+<LocationPage locale="en" kind={kind} slug={slug!} />

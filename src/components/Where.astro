@@ -1,0 +1,65 @@
+---
+import { home, homeFacts } from '../data/home';
+import { retailers } from '../data/locations';
+import RetailerLogo from './RetailerLogo.astro';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+/** "Dónde estamos": cifra total, buscador, cadenas y mapa real (MapLibre) con todas las ubicaciones. */
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const h = home[locale];
+const facts = homeFacts(locale);
+const base = localePath('whereToBuy', locale);
+const cut = retailers.findIndex((r) => r.slug === 'presidente-supermarket');
+const shown = retailers.slice(0, cut >= 0 ? cut + 1 : 6);
+const nf = (n: number) => n.toLocaleString(locale === 'en' ? 'en-US' : 'es-US');
+---
+<section class="where" aria-labelledby="where-title" data-where="1">
+  <div class="container w1">
+    <div class="w1__copy">
+      <h2 id="where-title">{h.where.lead} <span class="n" data-count={facts.total}>{nf(facts.total)}</span> {h.where.noun}</h2>
+      <p class="states">{h.where.states(facts.states)}</p>
+      <form class="finder" action={base} method="get" role="search">
+        <label class="sr-only" for="where-q">{t('search.label')}</label>
+        <input id="where-q" name="q" type="text" autocomplete="postal-code" placeholder={t('search.placeholder')} required />
+        <button class="btn btn--yellow" type="submit">{t('search.button')}</button>
+      </form>
+      <ul class="chains" data-map-chains>
+        {shown.map((r) => (
+          <li><a href={`${base}${r.slug}/`} data-chain={r.slug}><RetailerLogo slug={r.slug} name={r.name} height="2.2rem" /><small>{r.stores.length}</small></a></li>
+        ))}
+        <li><a class="more" href={base}><span>{h.where.more}</span></a></li>
+      </ul>
+    </div>
+    <div class="homemap">
+      <div class="homemap__map" data-homemap role="region" aria-label={h.where.map}>
+        <p class="credit">© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://openfreemap.org">OpenFreeMap</a> · <a href="https://openmaptiles.org">OpenMapTiles</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>import '../scripts/homemap';</script>
+
+<style>
+  .where { background: var(--fq-red); color: var(--fq-white); padding-block: clamp(3.5rem, 9vw, 7rem); overflow: clip; }
+  h2 { margin: 0; font: 800 clamp(3rem, 6vw, 5rem)/1.05 var(--font-display); text-wrap: balance; }
+  .states { margin: .9rem 0 0; max-width: 30rem; font-size: 1.1rem; }
+  .n { display: inline-block; color: var(--fq-yellow); font-variant-numeric: tabular-nums; }
+  .w1 { display: grid; gap: 2.5rem 3rem; align-items: center; max-width: 90rem; }
+  @media (min-width: 52rem) { .w1 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); } }
+  .finder { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+  .finder input { flex: 1 1 14rem; padding: .85rem 1.3rem; border-radius: var(--radius-pill); border: 0; font: 400 1rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
+  .chains { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: .1rem; }
+  .chains a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: inherit; text-decoration: none; padding: .35rem 0; border-bottom: 1px solid rgb(255 255 255 / .35); font: 800 clamp(1.4rem, 3vw, 2rem)/1.2 var(--font-display); transition: padding-left .3s ease, color .2s; }
+  .chains .more { border-bottom: 0; opacity: .9; }
+  .chains small { font: 600 1rem var(--font-body); opacity: .85; }
+  .chains a:hover, .chains a:focus-visible { padding-left: .8rem; color: var(--fq-yellow); outline: none; }
+  /* El marco va un pelo girado a la derecha, pero SIN transformar el mapa (girar o contragirar un canvas WebGL lo remuestrea y se ve borroso):
+     el mapa queda derecho y una máscara SVG con un cuadrado girado recorta la forma. La sombra va en el contenedor. */
+  /* la atribución va dentro del recorte (abajo a la derecha, dentro del cuadrado girado) */
+  .credit { position: absolute; z-index: 2; right: 11%; bottom: 8.5%; margin: 0; font-size: .7rem; line-height: 1.2; color: var(--fq-ink); text-shadow: 0 0 3px var(--fq-cream), 0 0 3px var(--fq-cream), 0 0 6px var(--fq-cream); }
+  .credit a { color: inherit; text-underline-offset: .2em; }
+  .homemap { aspect-ratio: 1; width: min(100%, 43rem); justify-self: center; filter: drop-shadow(0 22px 22px rgb(0 0 0 / .28)); }
+  .homemap__map { width: 100%; height: 100%; background: var(--fq-cream); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 112' preserveAspectRatio='none'%3E%3Crect x='6' y='6' width='100' height='100' rx='9' transform='rotate%283 56 56%29'/%3E%3C/svg%3E") center / 100% 100% no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 112' preserveAspectRatio='none'%3E%3Crect x='6' y='6' width='100' height='100' rx='9' transform='rotate%283 56 56%29'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+  .homemap__map :global(.maplibregl-canvas) { outline: none; }
+</style>

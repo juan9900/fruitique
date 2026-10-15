@@ -1,0 +1,34 @@
+---
+import { alternatePath, ES_ENABLED, localePath, useTranslations, type Locale } from '../i18n/ui';
+interface Props { locale: Locale; switchHref?: string }
+const { locale, switchHref } = Astro.props;
+const t = useTranslations(locale);
+const other: Locale = locale === 'en' ? 'es' : 'en';
+---
+<footer class="site-footer">
+  <div class="container inner">
+    <div>
+      <p class="brand">fruitique</p>
+      <p class="tag">{t('footer.tagline')}</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href={localePath('products', locale)}>{t('nav.products')}</a>
+      <a href={localePath('flavors', locale)}>{t('nav.flavors')}</a>
+      <a href={localePath('whereToBuy', locale)}>{t('nav.whereToBuy')}</a>
+      <a href={localePath('story', locale)}>{t('nav.story')}</a>
+      <a href={localePath('contact', locale)}>{t('nav.contact')}</a>
+      {ES_ENABLED && <a href={switchHref ?? alternatePath(Astro.url, other)} hreflang={other} lang={other}>{t('lang.switch')}</a>}
+    </nav>
+  </div>
+  <p class="container copy">© {new Date().getFullYear()} Fruitique®. {t('footer.rights')}</p>
+</footer>
+<style>
+  .site-footer { background: var(--fq-red); color: var(--fq-white); padding-block: 2.5rem 1.5rem; }
+  .inner { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; }
+  .brand { font: 800 2rem var(--font-display); margin: 0; }
+  .tag { margin: 0; color: var(--fq-yellow); font-weight: 700; }
+  nav { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: flex-start; }
+  nav a { text-decoration: none; font-weight: 600; }
+  nav a:hover { text-decoration: underline; }
+  .copy { margin-top: 2rem; font-size: .85rem; opacity: .85; }
+</style>

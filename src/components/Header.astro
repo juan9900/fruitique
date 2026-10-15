@@ -1,0 +1,54 @@
+---
+import { alternatePath, ES_ENABLED, localePath, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
+interface Props { locale: Locale; switchHref?: string }
+const { locale, switchHref } = Astro.props;
+const t = useTranslations(locale);
+const other: Locale = locale === 'en' ? 'es' : 'en';
+const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereToBuy' | 'nav.story' | 'nav.contact' }[] = [
+  { key: 'products', label: 'nav.products' },
+  { key: 'flavors', label: 'nav.flavors' },
+  { key: 'whereToBuy', label: 'nav.whereToBuy' },
+  { key: 'story', label: 'nav.story' },
+  { key: 'contact', label: 'nav.contact' },
+];
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="logo" href={localePath('home', locale)} aria-label="Fruitique — Handmade Happiness">
+      <!-- TODO: reemplazar por el logo oficial SVG cuando la clienta lo entregue (no reescribir el logo con texto) -->
+      <span class="logo-ph">fruitique</span>
+    </a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+    <label for="nav-toggle" class="burger" aria-label={t('nav.menu')}><span></span></label>
+    <nav class="nav" aria-label="Main">
+      {nav.map((n) => <a href={localePath(n.key, locale)}>{t(n.label)}</a>)}
+      {ES_ENABLED && (
+      <a class="lang" href={switchHref ?? alternatePath(Astro.url, other)} hreflang={other} lang={other} aria-label={t('lang.switchLabel')} title={t('lang.switch')}>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5" /><path d="M2.5 12h19M12 2.5c2.6 2.7 3.9 5.9 3.9 9.5s-1.3 6.8-3.9 9.5c-2.6-2.7-3.9-5.9-3.9-9.5S9.4 5.2 12 2.5z" /></svg>
+        <span aria-hidden="true">{other.toUpperCase()}</span>
+      </a>
+      )}
+      <a class="btn btn--yellow" href={localePath('whereToBuy', locale)}>{t('cta.find')}</a>
+    </nav>
+  </div>
+</header>
+<style>
+  .site-header { background: var(--fq-red); color: var(--fq-white); position: sticky; top: 0; z-index: 10; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }
+  .logo { text-decoration: none; font: 800 1.9rem var(--font-display); letter-spacing: -.02em; }
+  .nav { display: flex; align-items: center; gap: 1.1rem; white-space: nowrap; }
+  .nav a:not(.btn) { text-decoration: none; font-weight: 600; }
+  .nav a:not(.btn):hover { text-decoration: underline; text-decoration-color: var(--fq-yellow); text-underline-offset: 6px; }
+  .nav a.lang { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; font-weight: 600; letter-spacing: .04em; opacity: .75; padding: .3rem .5rem; border-radius: var(--radius-pill); transition: opacity .2s, background-color .2s; }
+  .nav a.lang:hover { opacity: 1; background: rgb(255 255 255 / .16); text-decoration: none; }
+  .nav a.lang:focus-visible { opacity: 1; outline: 3px solid var(--fq-yellow); }
+  .nav-toggle, .burger { display: none; }
+  @media (max-width: 75rem) {
+    .burger { display: block; cursor: pointer; padding: .75rem; }
+    .burger span, .burger span::before, .burger span::after { display: block; width: 1.6rem; height: 3px; background: var(--fq-white); border-radius: 2px; position: relative; content: ''; }
+    .burger span::before { position: absolute; top: -7px; } .burger span::after { position: absolute; top: 7px; }
+    .nav { display: none; position: absolute; inset: 100% 0 auto 0; flex-direction: column; align-items: stretch; background: var(--fq-red); padding: 1rem var(--gutter) 1.5rem; gap: 1rem; }
+    .nav-toggle:checked ~ .nav { display: flex; }
+    .nav-toggle:focus-visible ~ .burger { outline: 3px solid var(--fq-yellow); }
+  }
+</style>

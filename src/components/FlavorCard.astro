@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import ProductArt from './ProductArt.astro';
+import { mediaOf, productMedia } from '../data/media';
+import type { Locale } from '../i18n/ui';
+/** Card de sabor/producto: foto a sangre con el nombre sobre franja de color; sin foto, el envase; sin envase, la ilustración. */
+interface Props {
+  locale: Locale;
+  kind: 'flavors' | 'products';
+  it: { slug: string; name: string; href: string; bg: string; ink: string; pop: string; accent: string; art: 'popsicle' | 'squarebar' | 'pint' | 'sandwich' };
+}
+const { locale, kind, it } = Astro.props;
+const m = kind === 'flavors' ? mediaOf(it.slug) : productMedia[it.slug];
+const photo = m?.photos[0] ?? (kind === 'flavors' ? m?.texture : undefined);
+---
+<a class="card" data-cream={it.bg === 'var(--fq-cream)' ? '' : undefined} href={it.href} data-reveal style={`--bg:${it.bg}; --ink:${it.ink}; --pop-body:${it.pop}; --pop-accent:${it.accent}`}>
+  {photo
+    ? <Image src={photo} alt="" class="photo" widths={[400, 700]} sizes="(min-width: 60rem) 20rem, 90vw" />
+    : <span class="flat">{m?.pack
+      ? <Image src={m.pack} alt="" class="art real" widths={[240, 400]} sizes="(min-width: 60rem) 14rem, 45vw" />
+      : <ProductArt kind={it.art} class="art" />}</span>}
+  <span class="label"><span class="name">{it.name}</span><span class="go">{locale === 'en' ? 'See more →' : 'Ver más →'}</span></span>
+</a>
+<style>
+  .card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; aspect-ratio: 4 / 5; border-radius: var(--radius); background: var(--bg); color: var(--ink); text-decoration: none; overflow: hidden; transition: transform .25s ease; }
+  /* fondo crema = fondo de la página: contorno para que la card se vea */
+  .card[data-cream]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 3px var(--fq-red); pointer-events: none; }
+  .card:hover, .card:focus-visible { transform: translateY(-6px); }
+  .card :global(.photo) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .card:hover :global(.photo), .card:focus-visible :global(.photo) { transform: scale(1.06); }
+  .flat { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem 1rem 5.5rem; }
+  .flat :global(.art) { width: 45%; height: auto; max-height: 100%; transition: transform .35s cubic-bezier(.3,1.6,.5,1); filter: drop-shadow(0 12px 0 rgb(0 0 0 / .12)); }
+  .flat :global(.art.real) { width: 85%; max-height: 14rem; object-fit: contain; filter: drop-shadow(0 14px 8px rgb(0 0 0 / .2)); }
+  .card:hover .flat :global(.art), .card:focus-visible .flat :global(.art) { transform: rotate(8deg) translateY(-6px) scale(1.05); }
+  .label { position: relative; display: flex; flex-direction: column; gap: .25rem; padding: 1rem 1.25rem 1.25rem; background: var(--bg); }
+  .name { font: italic 700 clamp(1.3rem, 2.6vw, 2.1rem) var(--font-accent); line-height: 1.05; overflow-wrap: break-word; hyphens: manual; }
+  .go { font-weight: 700; font-size: .95rem; }
+</style>

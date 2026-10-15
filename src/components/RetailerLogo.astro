@@ -1,0 +1,15 @@
+---
+import { retailerLogo } from '../data/retailer-logos';
+/** Logo de la cadena sobre una ficha blanca (se lee sobre cualquier color de marca). Sin logo, muestra el nombre. */
+interface Props { slug: string; name: string; height?: string; class?: string }
+const { slug, name, height = '2.4rem', class: cls } = Astro.props;
+const src = retailerLogo(slug);
+---
+{src
+  ? <span class:list={['rl', cls]} style={`--h:${height}`}><img src={src} alt={name} loading="lazy" decoding="async" /></span>
+  : <span class:list={['rl rl--text', cls]}>{name}</span>}
+<style>
+  .rl { display: inline-flex; align-items: center; justify-content: center; background: var(--fq-white); border-radius: .6rem; padding: .35rem .8rem; }
+  .rl img { display: block; height: var(--h); width: auto; max-width: 9rem; object-fit: contain; }
+  .rl--text { background: none; padding: 0; }
+</style>

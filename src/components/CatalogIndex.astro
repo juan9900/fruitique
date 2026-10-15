@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FlavorCard from './FlavorCard.astro';
+import { flavors, flavorSlug } from '../data/flavors';
+import { products, productSlug } from '../data/products';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+
+interface Props { locale: Locale; kind: 'flavors' | 'products' }
+const { locale, kind } = Astro.props;
+const t = useTranslations(locale);
+const other: Locale = locale === 'en' ? 'es' : 'en';
+const base = (l: Locale) => localePath(kind === 'flavors' ? 'flavors' : 'products', l);
+
+const items = kind === 'flavors'
+  ? flavors.map((f) => ({ ...f, name: f[locale], href: `${base(locale)}${flavorSlug(f, locale)}/`, art: 'popsicle' as const }))
+  : products.map((p) => ({ ...p, name: p[locale], href: `${base(locale)}${productSlug(p, locale)}/`, art: p.kind }));
+
+const title = t(kind === 'flavors' ? 'flavors.title' : 'products.title');
+const lead = t(kind === 'flavors' ? 'flavors.lead' : 'products.lead');
+const metaTitle = kind === 'flavors'
+  ? (locale === 'en' ? 'Fruitique flavors — natural handmade popsicles' : 'Sabores Fruitique — paletas artesanales naturales')
+  : (locale === 'en' ? 'Fruitique products — popsicles, SquareBars and pints' : 'Productos Fruitique — paletas, SquareBars y pints');
+
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fruitique', item: new URL(localePath('home', locale), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: t(kind === 'flavors' ? 'nav.flavors' : 'nav.products'), item: new URL(base(locale), Astro.site).href },
+  ],
+};
+---
+<BaseLayout locale={locale} title={metaTitle} description={lead} alternates={{ en: base('en'), es: base('es') } as Record<Locale, string>} jsonLd={[crumbs]}>
+  <section class="intro">
+    <div class="container">
+      <h1 data-split>{title}</h1>
+      <p class="lead">{lead}</p>
+    </div>
+  </section>
+  <section class="cards">
+    <div class="container grid" class:list={[kind]}>
+      {items.map((it) => (
+        <FlavorCard locale={locale} kind={kind} it={it} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .intro { padding-block: clamp(2.5rem, 7vw, 5rem) 1.5rem; }
+  .intro h1 { font-size: clamp(2.6rem, 8vw, 5.5rem); color: var(--fq-red); max-width: 14ch; }
+  .lead { font-size: 1.2rem; max-width: 36rem; margin: 0; }
+  .cards { padding-block: 1.5rem clamp(3rem, 8vw, 6rem); }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  .grid.products { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
+</style>

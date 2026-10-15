@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contact } from '../data/pages';
+import { localePath, type Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = contact[locale];
+---
+<BaseLayout locale={locale} title={`${c.title} — Fruitique`} description={c.metaDesc} alternates={{ en: localePath('contact', 'en'), es: localePath('contact', 'es') } as Record<Locale, string>}>
+  <section class="intro">
+    <div class="container">
+      <h1 data-split>{c.h1}</h1>
+      <p class="lead">{c.lead}</p>
+      <!-- El destinatario del correo se configura en Netlify (Forms → Notifications). No hay contacto real aún. -->
+      <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-ok={c.ok} data-error={c.error} data-sending={c.sending}>
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="locale" value={locale} />
+        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <label>{c.name}<input name="name" type="text" required autocomplete="name" /></label>
+        <label>{c.email}<input name="email" type="email" required autocomplete="email" /></label>
+        <label>{c.message}<textarea name="message" rows="6" required></textarea></label>
+        <button class="btn btn--red" type="submit">{c.send}</button>
+        <p id="contact-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+  <script>
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    const status = document.getElementById('contact-status');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button') as HTMLButtonElement;
+      btn.disabled = true;
+      if (status) status.textContent = form.dataset.sending ?? '';
+      try {
+        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        if (status) status.textContent = form.dataset.ok ?? '';
+      } catch {
+        if (status) status.textContent = form.dataset.error ?? '';
+      }
+      btn.disabled = false;
+    });
+  </script>
+</BaseLayout>
+<style>
+  .intro { padding-block: clamp(2.5rem, 7vw, 5rem) clamp(3rem, 8vw, 6rem); }
+  h1 { font-size: clamp(2.8rem, 9vw, 6rem); color: var(--fq-red); }
+  .lead { font-size: 1.2rem; max-width: 34rem; margin: 0 0 2rem; }
+  form { display: grid; gap: 1.1rem; max-width: 34rem; }
+  label { display: grid; gap: .35rem; font-weight: 600; }
+  input, textarea { padding: .85rem 1.1rem; border-radius: .9rem; border: 2px solid transparent; background: var(--fq-white); font: 400 1rem var(--font-body); color: var(--fq-ink); }
+  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--fq-yellow); border-color: var(--fq-red); }
+  .hp { position: absolute; left: -9999px; }
+  button { justify-self: start; }
+  #contact-status { min-height: 1.5rem; margin: 0; font-weight: 600; }
+</style>

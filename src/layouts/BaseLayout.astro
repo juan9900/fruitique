@@ -1,0 +1,62 @@
+---
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '@fontsource/poppins/800.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { alternatePath, ES_ENABLED, locales, useTranslations, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  /** Rutas equivalentes por idioma (para hreflang y selector) cuando los slugs difieren. */
+  alternates?: Record<Locale, string>;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+const { locale, title, description, alternates, jsonLd = [], noindex = false } = Astro.props;
+const altPath = (l: Locale) => alternates?.[l] ?? alternatePath(Astro.url, l);
+const other: Locale = locale === 'en' ? 'es' : 'en';
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Fruitique',
+  url: 'https://fruitiqueicecream.com/',
+  slogan: 'Handmade Happiness',
+};
+const t = useTranslations(locale);
+const pageTitle = title ?? t('site.title');
+const pageDescription = description ?? t('site.description');
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <script is:inline>if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion-ok');</script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {ES_ENABLED && locales.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(altPath(l), Astro.site)} />
+    ))}
+    {ES_ENABLED && <link rel="alternate" hreflang="x-default" href={new URL(altPath('en'), Astro.site)} />}
+    {[organization, ...jsonLd].map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'es_US'} />
+  </head>
+  <body>
+    <Header locale={locale} switchHref={altPath(other)} />
+    <main id="main"><slot /></main>
+    <Footer locale={locale} switchHref={altPath(other)} />
+    <script>import '../scripts/motion';</script>
+  </body>
+</html>

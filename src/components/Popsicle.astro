@@ -1,0 +1,11 @@
+---
+/* Paleta ilustrada con la sonrisa de la marca. Placeholder visual hasta tener fotos de producto. */
+interface Props { class?: string }
+const { class: cls } = Astro.props;
+---
+<svg class={cls} viewBox="0 0 120 240" role="img" aria-hidden="true" focusable="false">
+  <rect class="pop-stick" x="50" y="150" width="20" height="82" rx="10" fill="var(--pop-accent, var(--fq-yellow))" />
+  <rect class="pop-body" x="14" y="8" width="92" height="150" rx="46" fill="var(--pop-body, var(--fq-white))" />
+  <path class="pop-shine" d="M34 40 q-8 22 -6 52" stroke="var(--pop-accent, var(--fq-yellow))" stroke-width="8" stroke-linecap="round" fill="none" opacity=".55" />
+  <path class="pop-smile" d="M42 92 q18 22 36 0" stroke="var(--pop-accent, var(--fq-yellow))" stroke-width="8" stroke-linecap="round" fill="none" />
+</svg>

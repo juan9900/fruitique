@@ -1,0 +1,9 @@
+---
+import CatalogDetail from "../../components/CatalogDetail.astro";
+import { flavors, flavorSlug } from "../../data/flavors";
+export function getStaticPaths() {
+  return flavors.map((x) => ({ params: { slug: flavorSlug(x, "en") } }));
+}
+const { slug } = Astro.params;
+---
+<CatalogDetail locale="en" kind="flavors" slug={slug!} />

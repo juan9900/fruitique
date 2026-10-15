@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { heroPacks, mediaOf, productMedia, journeyPhotos } from '../data/media';
+import { featured, flavorSlug } from '../data/flavors';
+import { products, productSlug } from '../data/products';
+import { retailers } from '../data/locations';
+import { home, homeFacts, bitSlots, bitKinds, stageThemes, stageMoreTheme } from '../data/home';
+import Journey from './Journey.astro';
+import Where from './Where.astro';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+// Cierre del escenario: otras formas de Fruitique (pint de Piña Colada, SquareBars, sándwich), en abanico.
+const moreArt = [productMedia.pints.packs![0], productMedia['square-bars'].pack!, productMedia['ice-cream-sandwiches'].pack!];
+const h = home[locale];
+const facts = homeFacts(locale);
+const faqItems = h.faq.items(facts.total, facts.states, facts.chains, facts.flavorNames, facts.flavorCount);
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((it) => ({ '@type': 'Question', name: it.q, acceptedAnswer: { '@type': 'Answer', text: it.a } })),
+};
+---
+<BaseLayout locale={locale} jsonLd={[faqLd]}>
+  <section class="hero">
+    <div class="container grid">
+      <div>
+        <h1 data-split>{t('hero.title')}</h1>
+        <p class="lead" data-hero-fade>{t('hero.text')}</p>
+        <form class="finder" data-hero-fade action={localePath('whereToBuy', locale)} method="get" role="search">
+          <label class="sr-only" for="q">{t('search.label')}</label>
+          <input id="q" name="q" type="text" autocomplete="postal-code" placeholder={t('search.placeholder')} required />
+          <button class="btn btn--yellow" type="submit">{t('search.button')}</button>
+        </form>
+      </div>
+      <div class="visual">
+        <span class="disc" aria-hidden="true"></span>
+        <!-- Sonrisa del ícono oficial (manual de identidad, p. 22); trazo copiado del vector del PDF -->
+        <svg class="smile" viewBox="-6 -6 81.3 36.2" aria-hidden="true" focusable="false"><path d="M69.3 0C64.12 14.12 50.56 24.19 34.65 24.19 18.74 24.19 5.18 14.13 0 .02" fill="none" stroke="currentColor" stroke-width="10.28" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <Image src={heroPacks[0]} alt="" class="fan f1" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
+        <Image src={heroPacks[2]} alt="" class="fan f3" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
+        <Image src={heroPacks[1]} alt="" class="fan f2" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <section class="stage" aria-labelledby="stage-title">
+    <div class="stage__sticky container">
+      <div class="stage__copy">
+        <h2 id="stage-title" class="sr-only">{t('stage.title')}</h2>
+        <ul class="stage__list">
+          {featured.map((f) => (
+            <li class="stage__item" data-bg={stageThemes[f.slug].bg} data-ink={stageThemes[f.slug].ink} data-text={stageThemes[f.slug].text} data-pop={stageThemes[f.slug].pop} data-accent={stageThemes[f.slug].accent}>
+              <p class="stage__name">{f[locale]}</p>
+              <p class="stage__desc">{locale === 'en' ? f.descEn : f.descEs}</p>
+              <a class="stage__link" href={`${localePath('flavors', locale)}${flavorSlug(f, locale)}/`}>{h.stage.see}<span class="sr-only">: {f[locale]}</span></a>
+            </li>
+          ))}
+          <li class="stage__item stage__item--more" data-bg={stageMoreTheme.bg} data-ink={stageMoreTheme.ink} data-text={stageMoreTheme.text} data-pop={stageMoreTheme.pop} data-accent={stageMoreTheme.accent}>
+            <p class="stage__name">{h.stage.moreName}</p>
+            <p class="stage__desc">{h.stage.moreDesc}</p>
+            <a class="stage__link" href={localePath('flavors', locale)}>{h.stage.moreCta}</a>
+          </li>
+        </ul>
+        <a class="btn btn--white" href={localePath('whereToBuy', locale)}>{t('stage.cta')}</a>
+      </div>
+      <div class="stage__art" aria-hidden="true">
+        <div class="stage__pop">
+          {featured.map((f) => {
+            const m = mediaOf(f.slug);
+            const cut = (m.lidCut ?? 0.18) * 100;
+            return (
+              <div class="stage__pint" data-cut={cut} style={`--cut:${cut}%`}>
+                <Image class="stage__tub" src={m.pack!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
+                <Image class="stage__lid" src={m.pack!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
+              </div>
+            );
+          })}
+        </div>
+        <div class="stage__bits">
+          {featured.map((f) => {
+            const m = mediaOf(f.slug);
+            return (
+              <div class="bits">
+                {bitSlots.map((slot, i) => {
+                  const kind = bitKinds[f.slug][i] === 'fruit' && !m.texture ? 'dot' : bitKinds[f.slug][i];
+                  return (
+                    <span class={`bit bit--${kind}${i > 5 ? ' bit--desk' : ''}`} data-x={slot.x} data-y={slot.y} style={`--x:${slot.x}%;--y:${slot.y}%;--r:${slot.r}deg;--s:${slot.s}rem`}>
+                      {kind === 'fruit' ? <Image src={m.texture!} alt="" widths={[160, 320]} sizes="8rem" /> : (
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          {kind === 'drop' && <path d="M12 2C12 2 4 11 4 16a8 8 0 0 0 16 0C20 11 12 2 12 2z" />}
+                          {kind === 'seed' && <ellipse cx="12" cy="12" rx="5" ry="9" />}
+                          {kind === 'leaf' && <path d="M4 20C4 8 12 4 20 4C20 12 16 20 4 20z" />}
+                          {kind === 'dot' && <circle cx="12" cy="12" r="9" />}
+                          {kind === 'ring' && <circle cx="12" cy="12" r="8" />}
+                        </svg>
+                      )}
+                    </span>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+        <div class="stage__more">
+          {moreArt.map((img, k) => <Image class={`more__pack more__pack--${k}`} src={img} alt="" widths={[300, 500]} sizes="(min-width: 52rem) 16rem, 40vw" />)}
+        </div>
+        <div class="stage__dots">{[...featured, null].map(() => <span></span>)}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lines" aria-labelledby="lines-title">
+    <div class="container">
+      <div class="lines__head">
+        <h2 id="lines-title" data-lines-title>{h.products.title}</h2>
+        <p data-lines-lead>{h.products.lead}</p>
+      </div>
+    </div>
+    <div class="lines__grid">
+        {products.map((p) => (
+          <article class={`line line--${p.kind}`} style={`--bg:${p.bg};--ink:${p.ink}`}>
+            <div class="line__art">
+              <Image src={productMedia[p.slug].pack!} alt="" widths={[360, 600, 900]} sizes="(min-width: 62rem) 20rem, 80vw" />
+            </div>
+            <div class="line__copy">
+              <h3>{p[locale]}</h3>
+              <p>{locale === 'en' ? p.descEn : p.descEs}</p>
+              <a class={`btn ${p.kind === 'popsicle' ? 'btn--yellow' : p.kind === 'squarebar' ? 'btn--red' : 'btn--white'}`} href={`${localePath('products', locale)}${productSlug(p, locale)}/`}>{h.products.see(p.short?.[locale] ?? p[locale])}</a>
+            </div>
+          </article>
+        ))}
+    </div>
+  </section>
+
+  <Journey locale={locale} />
+
+  <Where locale={locale} />
+
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="container faq__in">
+      <h2 id="faq-title" data-reveal>{h.faq.title}</h2>
+      <div class="faq__list">
+        {faqItems.map((it) => (
+          <details>
+            <summary>{it.q}</summary>
+            <div class="faq__a"><p>{it.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container">
+      <h2 data-split-words>{t('band.title')}</h2>
+      <a class="btn btn--yellow" href={localePath('whereToBuy', locale)}>{t('cta.find')}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Hero ── */
+  .hero { background: var(--fq-white); color: var(--fq-red); padding-block: clamp(2.5rem, 8vw, 6rem); overflow: clip; }
+  .grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 52rem) { .grid { grid-template-columns: 1.2fr 1fr; } }
+  h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); }
+  .lead { font-size: 1.15rem; max-width: 34rem; }
+  @media (max-width: 51.99rem) {
+    .hero h1 { font-size: 2.85rem; line-height: 1.04; letter-spacing: -.01em; text-wrap: balance; }
+    .lead { font-size: 1.05rem; opacity: .92; }
+    .visual { width: min(100%, 23rem); margin-inline: auto; }
+    /* helados más grandes dentro del círculo (el abanico se abre un poco más hacia los lados) */
+    .visual :global(.fan) { width: 54%; left: 23%; bottom: 14%; }
+    .visual :global(.f1) { left: -2%; }
+    .visual :global(.f3) { left: 48%; }
+  }
+  .finder { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+  .finder input { flex: 1 1 14rem; padding: .8rem 1.2rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-red); font: 400 1rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
+  .visual { position: relative; aspect-ratio: 1; display: grid; place-items: center; }
+
+  /* Abanico de envases con la sonrisa del ícono */
+  .disc { position: absolute; inset: 4%; border-radius: 50%; background: var(--fq-yellow); }
+  .visual :global(.fan) { position: absolute; width: 46.2%; height: auto; left: 26.9%; bottom: 16%; transform-origin: 50% 100%; filter: drop-shadow(0 18px 12px rgb(0 0 0 / .25)); }
+  .visual :global(.f1) { left: 3.2%; transform: rotate(-14deg); }
+  .visual :global(.f3) { left: 50.6%; transform: rotate(14deg); }
+  .visual :global(.f2) { z-index: 2; }
+  /* con movimiento, el JS lo muestra justo al empezar (evita ver el estado final antes de animar) */
+  :global(.motion-ok) .visual > :global(*) { visibility: hidden; }
+  .smile { position: absolute; width: 36%; left: 32%; top: 22%; color: var(--fq-red); overflow: visible; }
+
+
+  /* ── Escenario de sabores ── */
+  .stage { --stage-bg: var(--fq-red); --stage-ink: var(--fq-white); --stage-text: var(--fq-white); --pop-body: var(--fq-white); --pop-accent: var(--fq-yellow); background: var(--stage-bg); color: var(--stage-ink); padding-block: clamp(3rem, 8vw, 6rem); overflow-x: clip; }
+  .stage__sticky { display: grid; gap: 2rem; align-items: center; }
+  .stage__list { list-style: none; margin: 1.5rem 0 2rem; padding: 0; display: grid; gap: 2rem; }
+  .stage__name { margin: 0; font: italic 700 clamp(2.2rem, 6vw, 3.4rem)/1.05 var(--font-accent); }
+  .stage__desc { margin: .5rem 0 .75rem; max-width: 28rem; font-size: 1.1rem; color: var(--stage-text); }
+  .stage__link { font-weight: 700; text-underline-offset: .25em; }
+  .stage__art { display: none; }
+  /* modo fijado (GSAP añade .stage-pinned): un solo sabor a la vez */
+  .stage.stage-pinned { min-height: 100svh; padding-block: 5rem 1rem; display: grid; align-items: center; }
+  .stage-pinned .stage__sticky { grid-template-columns: 1fr; gap: .5rem; }
+  .stage-pinned .stage__art { order: -1; }
+  @media (min-width: 52rem) { .stage-pinned .stage__sticky { grid-template-columns: 1fr 1.1fr; gap: 2rem; } .stage-pinned .stage__art { order: 0; } }
+  .stage-pinned .stage__list { display: grid; margin: 1rem 0 1.5rem; gap: 0; }
+  .stage-pinned .stage__item { grid-area: 1 / 1; }
+  .stage-pinned .stage__name { font-size: clamp(2.6rem, 8vw, 6rem); line-height: 1.02; color: var(--stage-ink); }
+  .stage-pinned .stage__link { color: var(--stage-text); }
+  .stage .btn--white { background: var(--stage-text); color: var(--stage-bg); }
+  @media (max-width: 51.99rem) {
+    .stage__copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .stage__item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .stage__desc { margin-inline: auto; }
+  }
+  .stage-pinned .stage__art { display: grid; place-items: center; position: relative; width: min(100%, 42rem); margin-inline: auto; aspect-ratio: 1.15; }
+  @media (min-width: 52rem) { .stage-pinned .stage__art { aspect-ratio: 1; } }
+  .stage__pop { width: 96%; display: grid; filter: drop-shadow(0 26px 14px rgb(0 0 0 / .22)); }
+  .stage__pint { grid-area: 1 / 1; display: grid; position: relative; }
+  .stage__pint :global(img) { grid-area: 1 / 1; width: 100%; height: auto; }
+  .stage__pint :global(.stage__tub) { clip-path: inset(calc(var(--cut) - .4%) 0 0 0); }
+  .stage__pint :global(.stage__lid) { clip-path: inset(0 0 calc(100% - var(--cut)) 0); transform-origin: 50% 9%; }
+  .stage__bits, .bits { position: absolute; inset: 0; pointer-events: none; }
+  .bit { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); }
+  .bit > :global(*) { rotate: var(--r); width: 100%; height: 100%; }
+  .bit--drop svg, .bit--dot svg { fill: var(--pop-accent); }
+  .bit--seed svg, .bit--ring svg { opacity: .9; }
+  .bit--leaf svg { fill: var(--pop-accent); }
+  .bit--seed svg { fill: var(--stage-ink); }
+  .bit--ring svg { fill: none; stroke: var(--stage-ink); stroke-width: 3; }
+  .bit--fruit { width: calc(var(--s) * 1.7); height: calc(var(--s) * 1.7); margin: calc(var(--s) * -.85) 0 0 calc(var(--s) * -.85); }
+  .bit--fruit :global(img) { border-radius: 50%; object-fit: cover; box-shadow: 0 10px 18px rgb(0 0 0 / .2); }
+  @media (max-width: 51.99rem) { .bit--desk { display: none; } .bit { scale: .62; } }
+  .stage__more { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
+  .stage-pinned .stage__more { display: flex; }
+  .stage__more :global(.more__pack) { position: absolute; height: auto; filter: drop-shadow(0 22px 12px rgb(0 0 0 / .25)); }
+  .stage__more :global(.more__pack--0) { width: 46%; left: 0; top: 22%; rotate: -4deg; }
+  .stage__more :global(.more__pack--1) { width: 48%; right: 4%; top: 54%; rotate: 3deg; }
+  .stage__more :global(.more__pack--2) { width: 54%; right: 0; top: 8%; rotate: 5deg; }
+  .stage__dots { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; gap: .6rem; }
+  .stage__dots span { width: .6rem; height: .6rem; border-radius: 50%; background: var(--stage-ink); opacity: .5; }
+
+  /* ── Líneas de producto ── */
+  .lines { background: var(--fq-cream); padding-block: clamp(3.5rem, 9vw, 7rem) 0; overflow: clip; }
+  .lines__head { margin-bottom: clamp(2rem, 5vw, 3rem); }
+  .lines__head h2 { font-size: clamp(2.2rem, 5.6vw, 4rem); color: var(--fq-red); max-width: 24ch; }
+  .lines__head p { font-size: 1.15rem; max-width: 34rem; margin: 0; }
+
+  /* Cuatro paneles pegados a todo el ancho, separados por diagonales (recorte con clip-path; el panel siguiente se monta --s sobre el anterior para que no quede hueco) */
+  .lines__grid { --s: clamp(1.5rem, 3.6vw, 3.25rem); display: flex; flex-direction: column; }
+  .line { position: relative; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; padding: calc(var(--s) + 1.5rem) 1.5rem calc(var(--s) + 1.5rem) clamp(1.5rem, 6vw, 4rem); margin-top: calc(var(--s) * -1); clip-path: polygon(0 var(--s), 100% 0, 100% calc(100% - var(--s)), 0 100%); }
+  .line:first-child { margin-top: 0; padding-top: 2.5rem; clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--s)), 0 100%); }
+  .line:last-child { padding-bottom: 3rem; clip-path: polygon(0 var(--s), 100% 0, 100% 100%, 0 100%); }
+  @media (min-width: 62rem) {
+    .lines__grid { flex-direction: row; }
+    .line { flex: 1 1 0; min-width: 0; margin-top: 0; margin-left: calc(var(--s) * -1); padding: 3rem calc(var(--s) + 1rem) 3rem calc(var(--s) + 1rem); min-height: 38rem; clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); }
+    .line:first-child { margin-left: 0; padding-left: 2rem; clip-path: polygon(0 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%); }
+    .line:last-child { padding-right: 2rem; clip-path: polygon(var(--s) 0, 100% 0, 100% 100%, 0 100%); }
+  }
+  /* los paneles (el color) siempre están; con movimiento solo su contenido nace oculto y lo muestra el JS al entrar. Si el JS falla, aparece solo a los 2.5 s */
+  :global(.motion-ok) .line__art :global(img), :global(.motion-ok) .line__copy > :global(*) { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+  .line__art { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; height: 15rem; margin-bottom: 1.5rem; }
+  .line__art :global(img) { width: auto; max-width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 12px rgb(0 0 0 / .25)); transition: translate .5s cubic-bezier(.34, 1.56, .64, 1), rotate .5s cubic-bezier(.34, 1.56, .64, 1), scale .5s cubic-bezier(.34, 1.56, .64, 1); }
+  /* empaques anchos y bajos: se ven completos en vez de limitarse por la altura */
+  .line--squarebar .line__art :global(img), .line--sandwich .line__art :global(img) { width: 100%; height: auto; max-height: 100%; }
+  /* el hover usa las propiedades individuales (translate/rotate/scale) para no pelear con el transform de GSAP */
+  .line:hover .line__art :global(img), .line:focus-within .line__art :global(img) { translate: 0 -.6rem; rotate: -3deg; scale: 1.04; }
+  .line h3 { font-size: clamp(1.9rem, 2.6vw, 2.6rem); margin: 0 0 .4rem; }
+  .line__copy { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+  .line__copy p { font-size: 1.05rem; margin: 0 0 1.5rem; flex: 1; }
+
+  /* ── Preguntas frecuentes ── */
+  .faq { padding-block: clamp(3.5rem, 9vw, 7rem); }
+  .faq__in { display: grid; gap: 2rem; }
+  @media (min-width: 52rem) { .faq__in { grid-template-columns: 1fr 1.6fr; align-items: start; } }
+  .faq h2 { font-size: clamp(2rem, 5vw, 3.4rem); color: var(--fq-red); max-width: 12ch; }
+  .faq details { border-bottom: 2px solid color-mix(in srgb, var(--fq-red) 35%, transparent); overflow: hidden; }
+  .faq summary { list-style: none; cursor: pointer; padding: 1.1rem 2.5rem 1.1rem 0; font: 700 1.2rem/1.3 var(--font-body); position: relative; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; position: absolute; right: 0; top: 50%; translate: 0 -50%; font-size: 1.8rem; color: var(--fq-red); transition: rotate .35s cubic-bezier(.34, 1.56, .64, 1); }
+  .faq details[open] summary::after, .faq details.is-open summary::after { rotate: 135deg; }
+  .faq details:not(.is-open)[open] summary::after { rotate: 0deg; }
+  .faq__a p { margin: 0 0 1.25rem; max-width: 40rem; }
+
+  /* ── Banda final ── */
+  .band { background: var(--fq-red); color: var(--fq-white); text-align: center; padding-block: clamp(3.5rem, 10vw, 7rem); overflow: clip; }
+  .band h2 { font-size: clamp(2rem, 6vw, 4rem); max-width: 22ch; margin-inline: auto; margin-bottom: 1.5rem; }
+  :global(.motion-ok) .band [data-split-words] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+</style>

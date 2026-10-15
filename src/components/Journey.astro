@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import { journeyPhotos } from '../data/media';
+import { home } from '../data/home';
+import { localePath, type Locale } from '../i18n/ui';
+/** Recorrido (descubre → elige → encuentra → disfruta): camino central translúcido con un tramo rojo que viaja con el scroll. */
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const h = home[locale];
+const lines = h.journey.lines;
+const d = 'M50 0 C 62 8, 38 17, 50 25 S 62 42, 50 50 S 38 67, 50 75 S 62 92, 50 100';
+---
+<section class="journey" data-journey aria-labelledby="journey-title">
+  <div class="container">
+    <h2 id="journey-title" class="sr-only">{h.journey.title}</h2>
+    <div class="path">
+      <svg class="path__line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="path__track" d={d} />
+        <path class="path__run" d={d} />
+      </svg>
+      <ul class="steps">
+        {lines.map((l, i) => (
+          <li class={`step${i % 2 ? ' step--flip' : ''}`}>
+            <div class="step__photo"><Image src={journeyPhotos[i]} alt="" widths={[360, 600, 800]} sizes="(min-width: 52rem) 22rem, 70vw" /></div>
+            <div class="step__text">
+              <p class="big">{l.h}</p>
+              <p class="small">{l.d} <a href={localePath(l.link, locale)}>{l.cta}</a></p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .journey { background: var(--fq-cream); padding-block: clamp(3.5rem, 9vw, 7rem); overflow: clip; }
+  .big { margin: 0; font: 800 clamp(1.9rem, 6vw, 4.6rem)/1.05 var(--font-display); color: var(--fq-red); }
+  .small { margin: .7rem 0 0; font-size: 1.05rem; max-width: 30rem; }
+  @media (min-width: 52rem) { .small { font-size: 1.15rem; } }
+  @media (max-width: 51.99rem) { .step__text { text-align: center; justify-self: center; } .small { margin-inline: auto; } }
+  .small a { font-weight: 700; color: var(--fq-red); text-underline-offset: .25em; white-space: nowrap; }
+  .path { position: relative; }
+  .path__line { display: none; }
+  @media (min-width: 52rem) { .path__line { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; } }
+  .path__track, .path__run { fill: none; stroke: var(--fq-red); stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-width: 6; }
+  .path__track { opacity: .16; }
+  /* tramo rojo: un pedazo corto de la línea (dash en px de pantalla) que JS desplaza a lo largo del camino; sin JS no se ve */
+  .path__run { stroke-dasharray: 0 99999; }
+  .steps { list-style: none; margin: 0; padding: 0 1rem; display: grid; gap: clamp(2.5rem, 8vw, 6rem); position: relative; }
+  @media (min-width: 52rem) { .steps { padding: 0; } .step__photo { width: min(22rem, 100%); } }
+  .step { display: grid; gap: 1.5rem 7rem; align-items: center; justify-items: start; }
+  @media (min-width: 52rem) { .step { grid-template-columns: 1fr 1fr; justify-items: stretch; } .step--flip .step__photo { order: 2; } .step--flip .step__text { text-align: right; justify-self: end; } .step--flip .small { margin-left: auto; } }
+  .step__photo { width: min(14rem, 100%); aspect-ratio: 1; border-radius: 50%; overflow: hidden; justify-self: center; box-shadow: 0 18px 30px rgb(0 0 0 / .18); border: .6rem solid var(--fq-white); }
+  .step__photo :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+</style>

@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { story } from '../data/pages';
+import { lifestyle, flavorMedia, productMedia } from '../data/media';
+import { localePath, type Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = story[locale];
+const colors = ['var(--fq-turquoise)', 'var(--fq-yellow)', 'var(--fq-purple)'];
+const inks = ['var(--fq-ink)', 'var(--fq-red)', 'var(--fq-white)'];
+const packs = [flavorMedia.strawberry.pack!, productMedia['square-bars'].pack!, flavorMedia['passion-fruit'].pack!];
+---
+<BaseLayout locale={locale} title={`${c.title} — Fruitique`} description={c.metaDesc} alternates={{ en: localePath('story', 'en'), es: localePath('story', 'es') } as Record<Locale, string>}>
+  <section class="story-hero">
+    <div class="container">
+      <h1 data-split>{c.h1a}<br /><em>{c.h1b}</em></h1>
+    </div>
+  </section>
+  <section class="manifesto">
+    <div class="container">
+      <p data-rise-lines>{c.manifesto}</p>
+    </div>
+  </section>
+  <section class="photo">
+    <figure><Image src={lifestyle.family} alt="" widths={[800, 1400, 2000]} sizes="100vw" data-parallax /></figure>
+  </section>
+  <section class="forthose">
+    <div class="container">
+      {c.forThose.map((line) => <p data-for-line>{line}</p>)}
+    </div>
+  </section>
+  <section class="pillars" data-layout="stagger">
+    {c.pillars.map((p, i) => (
+      <div class="pillar" style={`--bg:${colors[i]}; --ink:${inks[i]}`}>
+        <div class="container pillar__in">
+          <div class="pillar__text">
+            <h2>{p.t}</h2>
+            <p>{p.d}</p>
+          </div>
+          <Image class="pillar__pack" src={packs[i]} alt="" widths={[500, 900, 1200]} sizes="(min-width: 800px) 30vw, 60vw" />
+        </div>
+      </div>
+    ))}
+  </section>
+  <section class="closing">
+    <div class="container">
+      <h2 data-split-words>{c.closing}</h2>
+      <a class="btn btn--yellow" href={localePath('whereToBuy', locale)}>{c.cta}</a>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .story-hero { background: var(--fq-red); color: var(--fq-white); padding-block: clamp(4rem, 12vw, 9rem); }
+  h1 { font-size: clamp(2.6rem, 8.5vw, 6.5rem); max-width: 16ch; margin: 0; }
+  h1 em { font-style: normal; color: var(--fq-yellow); }
+  .manifesto { background: var(--fq-cream); padding-block: clamp(4rem, 12vw, 9rem); }
+  .manifesto p { font: 700 clamp(1.7rem, 4.4vw, 3.2rem)/1.2 var(--font-display); color: var(--fq-red); max-width: 26ch; margin: 0; }
+  :global(.motion-ok) .manifesto [data-rise-lines] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+  .photo figure { margin: 0; overflow: hidden; aspect-ratio: 16 / 9; max-height: 80svh; }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .forthose { background: var(--fq-purple); color: var(--fq-cream); padding-block: clamp(4rem, 11vw, 9rem); }
+  .forthose .container { display: grid; gap: clamp(1.8rem, 5vw, 4rem); }
+  :global(.motion-ok) .forthose [data-for-line] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+  .forthose p { font: 700 clamp(1.6rem, 4vw, 3rem)/1.15 var(--font-display); max-width: 24ch; margin: 0; }
+  .forthose p:nth-child(even) { margin-left: auto; text-align: right; color: var(--fq-yellow); }
+  .pillar { position: sticky; top: 0; min-height: min(100svh, 44rem); display: flex; align-items: center; background: var(--bg); color: var(--ink); padding-block: clamp(3rem, 8vw, 6rem); box-shadow: 0 -1.5rem 3rem rgb(0 0 0 / .12); }
+  .pillar__in { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center; }
+  .pillar h2 { font: italic 700 clamp(2.8rem, 9vw, 7rem)/1 var(--font-accent); margin: 0 0 .25em; }
+  .pillar p { font-size: clamp(1.1rem, 2vw, 1.5rem); max-width: 26rem; margin: 0; }
+  .pillar :global(.pillar__pack) { width: min(55vw, 17rem); height: auto; justify-self: center; filter: drop-shadow(0 1.2rem 1.5rem rgb(0 0 0 / .25)); }
+  @media (min-width: 800px) {
+    .pillar__in { grid-template-columns: 1.3fr 1fr; gap: 4rem; }
+    .pillar:nth-child(even) .pillar__text { order: 2; }
+    .pillar :global(.pillar__pack) { width: min(30vw, 22rem); }
+  }
+  /* Opción C: tarjetas a ~65% del ancho, alternadas izquierda/derecha y solapadas */
+  .pillars[data-layout='stagger'] { background: var(--fq-cream); padding-block: clamp(2rem, 6vw, 5rem); overflow: clip; }
+  .pillars[data-layout='stagger'] .pillar { position: relative; min-height: 0; width: min(92%, 52rem); margin-inline: auto; border-radius: 2.5rem; box-shadow: 0 1.2rem 2.5rem rgb(42 10 11 / .18); padding-block: clamp(2rem, 5vw, 3.5rem); }
+  .pillars[data-layout='stagger'] .pillar + .pillar { margin-top: -2rem; }
+  .pillars[data-layout='stagger'] .pillar:nth-child(odd) { margin-left: 4%; margin-right: auto; transform: rotate(-1.2deg); }
+  .pillars[data-layout='stagger'] .pillar:nth-child(even) { margin-right: 4%; margin-left: auto; transform: rotate(1.2deg); }
+  .pillars[data-layout='stagger'] .pillar:nth-child(even) .pillar__text { order: 0; }
+  .pillars[data-layout='stagger'] .pillar h2 { font-size: clamp(2.4rem, 6vw, 4.5rem); }
+  @media (min-width: 800px) {
+    .pillars[data-layout='stagger'] .pillar { width: 65%; margin-inline: 0; }
+    .pillars[data-layout='stagger'] .pillar:nth-child(odd) { margin-left: 6%; }
+    .pillars[data-layout='stagger'] .pillar:nth-child(even) { margin-left: auto; margin-right: 6%; }
+    .pillars[data-layout='stagger'] .pillar__in { grid-template-columns: 1.1fr 1fr; gap: 1rem; }
+    .pillars[data-layout='stagger'] .pillar :global(.pillar__pack) { width: min(30vw, 21rem); }
+  }
+  .closing { position: relative; background: var(--fq-red); color: var(--fq-white); text-align: center; padding-block: clamp(4rem, 12vw, 8rem); overflow: clip; }
+  .closing h2 { font-size: clamp(2.2rem, 7vw, 5rem); margin-bottom: 1.5rem; }
+  :global(.motion-ok) .closing [data-split-words] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+</style>

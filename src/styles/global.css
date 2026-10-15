@@ -1,0 +1,40 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+body { overflow-x: clip; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--fq-ink);
+  background: var(--fq-cream);
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.1; margin: 0 0 .5em; }
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--fq-yellow); outline-offset: 3px; }
+
+.container { width: 100%; max-width: var(--max-width); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  padding: .75rem 1.4rem; border-radius: var(--radius-pill); border: 0;
+  font: 700 1rem var(--font-body); text-decoration: none; cursor: pointer;
+  transition: transform .15s ease;
+}
+.btn:hover { transform: translateY(-2px) scale(1.03); }
+.btn--yellow { background: var(--fq-yellow); color: var(--fq-red); }  /* CTA principal sobre rojo */
+.btn--white { background: var(--fq-white); color: var(--fq-red); }
+.btn--red { background: var(--fq-red); color: var(--fq-white); }
+
+/* Motion: ocultar solo lo que GSAP va a revelar, con red de seguridad si el JS falla. */
+@keyframes fq-show { to { visibility: visible; } }
+.motion-ok [data-split] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
+
+/* Máscara de SplitText: margen extra abajo para que no corte las colas de p, g, y */
+.sp-mask { padding-bottom: .35em; margin-bottom: -.35em; }

@@ -1,0 +1,275 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import ProductArt from './ProductArt.astro';
+import { mediaOf, productMedia } from '../data/media';
+import { flavors, flavorSlug } from '../data/flavors';
+import { products, productSlug, linesOfFlavor } from '../data/products';
+import FlavorCard from './FlavorCard.astro';
+import RetailerLogo from './RetailerLogo.astro';
+import { homeFacts, stageThemes } from '../data/home';
+import { retailers } from '../data/locations';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+
+interface Props { locale: Locale; kind: 'flavors' | 'products'; slug: string }
+const { locale, kind, slug } = Astro.props;
+const t = useTranslations(locale);
+const isFlavor = kind === 'flavors';
+const list: any[] = isFlavor ? flavors : products;
+const slugOf = (x: any, l: Locale) => (isFlavor ? flavorSlug(x, l) : productSlug(x, l));
+const item = list.find((x) => slugOf(x, locale) === slug)!;
+const base = (l: Locale) => localePath(kind, l);
+const url = (x: any, l: Locale) => `${base(l)}${slugOf(x, l)}/`;
+const art = isFlavor ? 'popsicle' : item.kind;
+// Colores del header: los sabores del escenario de la home usan sus mismos colores (stageThemes); el resto, los suyos.
+const theme: { bg: string; ink: string; text: string; pop: string; accent: string } = (isFlavor && stageThemes[item.slug]) || { bg: item.bg, ink: item.ink, text: item.ink, pop: item.pop, accent: item.accent };
+const themeStyle = `--bg:${theme.bg}; --ink:${theme.ink}; --text:${theme.text}; --pop-body:${theme.pop}; --pop-accent:${theme.accent}`;
+const name: string = item[locale];
+const desc: string = locale === 'en' ? item.descEn : item.descEs;
+const media = isFlavor ? mediaOf(item.slug) : (productMedia[item.slug] ?? { photos: [] });
+const more = list.filter((x) => x !== item).slice(0, isFlavor ? 4 : 3);
+
+// ── Solo sabores: líneas donde viene, momento foto, CTA y más sabores ──
+const lines = isFlavor ? linesOfFlavor(item.slug).map((l) => {
+  const pm = productMedia[l.product.slug];
+  const img = l.product.kind === 'pint' && media.lidCut ? media.pack : l.product.kind === 'squarebar' && media.cup ? media.cup : pm?.pack;
+  return { name: l.label ?? l.product[locale], size: l.product.size, notes: locale === 'en' ? l.product.notesEn : l.product.notesEs, kind: l.product.kind, bg: l.product.bg, ink: l.product.ink, img, href: `${localePath('products', locale)}${productSlug(l.product, locale)}/` };
+}) : [];
+const linesTitle = locale === 'en' ? `Find ${name} as` : `Encuentra ${name} en`;
+const hasPhoto = media.photos.length > 0 || !!media.texture;
+const mainPhoto = media.photos[0] ?? media.texture;
+const sidePhoto = media.photos[0] && media.texture ? media.texture : media.photos[1];
+const facts = homeFacts(locale);
+const nf = (n: number) => n.toLocaleString(locale === 'en' ? 'en-US' : 'es-US');
+const ctaTitle = locale === 'en' ? `Craving ${name}? Find it near you.` : `¿Antojo de ${name}? Encuéntralo cerca de ti.`;
+const ctaLine = locale === 'en' ? `Fruitique is at ${nf(facts.total)} locations in ${facts.states}.` : `Fruitique está en ${nf(facts.total)} ubicaciones en ${facts.states}.`;
+const whereBase = localePath('whereToBuy', locale);
+// El CTA va en un color distinto al de la sección de foto (si el sabor es rojo, amarillo; si no, rojo).
+const ctaRed = theme.bg === 'var(--fq-red)';
+const ctaTheme = ctaRed ? 'var(--fq-yellow)' : 'var(--fq-red)';
+const ctaInk = ctaRed ? 'var(--fq-red)' : 'var(--fq-white)';
+const chainLinks = retailers.slice(0, 5);
+const shareLine = (f: any) => linesOfFlavor(f.slug).some((l) => lines.some((x) => x.name === (l.label ?? l.product[locale])));
+const moreFlavors = isFlavor ? [...flavors.filter((f) => f !== item && shareLine(f)), ...flavors.filter((f) => f !== item && !shareLine(f))].slice(0, 4)
+  .map((f) => ({ ...f, name: f[locale], href: `${base(locale)}${flavorSlug(f, locale)}/`, art: 'popsicle' as const })) : [];
+
+// ── Solo líneas de producto: sabores como tarjetas, datos de la línea, formatos y más líneas ──
+const lineFlavors = isFlavor ? [] : item.flavors.map((f: { slug: string; label?: string }) => {
+  const fl = flavors.find((x) => x.slug === f.slug)!;
+  return { ...fl, name: f.label ?? fl[locale], href: `${localePath('flavors', locale)}${flavorSlug(fl, locale)}/`, art: item.kind };
+});
+const lineNotes: string = isFlavor ? '' : (locale === 'en' ? item.notesEn : item.notesEs);
+const lineup = isFlavor ? [] : (media.packs ?? (media.pack ? [media.pack] : [])).slice(0, 4);
+const moreLines = isFlavor ? [] : more.map((x: any) => ({ ...x, name: x[locale], href: url(x, locale), art: x.kind }));
+const flavorsTitle = locale === 'en' ? `${name} flavors` : `Sabores de ${name}`;
+
+const metaTitle = isFlavor
+  ? (locale === 'en' ? `Fruitique ${name} — natural handmade popsicle` : `Fruitique de ${name} — paleta artesanal natural`)
+  : (locale === 'en' ? `Fruitique ${name} — handmade ice cream` : `Fruitique ${name} — helado artesanal`);
+const metaDesc = `${desc} ${t('cta.find')}.`;
+
+const product = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: isFlavor ? `Fruitique ${item.en}` : `Fruitique ${item.en}`,
+  description: locale === 'en' ? item.descEn : item.descEs,
+  brand: { '@type': 'Brand', name: 'Fruitique' },
+  category: isFlavor ? 'Ice cream' : item.en,
+  url: new URL(url(item, locale), Astro.site).href,
+};
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fruitique', item: new URL(localePath('home', locale), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: t(isFlavor ? 'nav.flavors' : 'nav.products'), item: new URL(base(locale), Astro.site).href },
+    { '@type': 'ListItem', position: 3, name, item: new URL(url(item, locale), Astro.site).href },
+  ],
+};
+---
+<BaseLayout locale={locale} title={metaTitle} description={metaDesc} alternates={{ en: url(item, 'en'), es: url(item, 'es') } as Record<Locale, string>} jsonLd={[product, crumbs]}>
+  <section class="page-hero" data-kind={kind} style={themeStyle}>
+    <div class="container grid">
+      <div class="copy">
+        <h1 data-split>{name}</h1>
+        <p class="desc" data-hero-fade>{desc}</p>
+        <div class="actions" data-hero-fade>
+          <a class="btn btn--cta" href={localePath('whereToBuy', locale)}>{t('cta.find')}</a>
+          <a class="back" href={base(locale)}>{t(isFlavor ? 'detail.allFlavors' : 'detail.allProducts')}</a>
+        </div>
+      </div>
+      {media.pack ? (
+        <div class="stage">
+          {media.cup && <Image src={media.cup} alt="" class="cup" widths={[240, 400]} sizes="12rem" />}
+          <Image src={media.pack} alt={`Fruitique ${item.en}`} class="art real" widths={[320, 520, 800]} sizes="(min-width: 52rem) 24rem, 70vw" loading="eager" />
+        </div>
+      ) : (
+        <div class="stage" aria-hidden="true"><ProductArt kind={art} class="art" /></div>
+      )}
+    </div>
+  </section>
+  <section class="cta" id="cta" style={`--bg:${ctaTheme};--ink:${ctaInk}`} aria-labelledby="cta-title">
+        <div class="container cta__grid">
+          <h2 id="cta-title" data-reveal>{ctaTitle}</h2>
+          <div class="cta__form" data-reveal>
+            <form action={whereBase} method="get" role="search">
+              <label class="sr-only" for="cta-q">{t('search.label')}</label>
+              <input id="cta-q" name="q" type="text" autocomplete="postal-code" placeholder={t('search.placeholder')} required />
+              <button class="btn btn--cta" type="submit">{t('search.button')}</button>
+            </form>
+            <p>{ctaLine}</p>
+            <ul>
+              {chainLinks.map((r) => <li><a href={`${whereBase}${r.slug}/`} aria-label={r.name}><RetailerLogo slug={r.slug} name={r.name} height="1.7rem" /></a></li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+  {isFlavor ? (
+    <>
+      {lines.length > 0 && (
+        <section class="lines" id="lines" aria-labelledby="lines-title">
+          <div class="container">
+            <h2 id="lines-title" data-reveal>{linesTitle}</h2>
+            <div class="lines__grid">
+              {lines.map((l) => (
+                <a class="line" href={l.href} data-reveal style={`--bg:${l.bg};--ink:${l.ink}`}>
+                  <span class="line__img">
+                    {l.img ? <Image src={l.img} alt="" widths={[300, 500]} sizes="(min-width: 52rem) 18rem, 60vw" /> : <ProductArt kind={l.kind} class="art" />}
+                  </span>
+                  <span class="line__txt">
+                    <span class="line__name">{l.name}</span>
+                    <span class="line__notes">{l.size} · {l.notes}</span>
+                    <span class="go">{locale === 'en' ? 'See the line →' : 'Ver la línea →'}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+      {hasPhoto && (
+        <section class="moment" id="moment" style={themeStyle}>
+          <div class="container moment__grid">
+            <div class="moment__photos">
+              <figure class="moment__main"><Image src={mainPhoto!} alt={`Fruitique ${item.en}`} widths={[640, 1000, 1400]} sizes="(min-width: 52rem) 36rem, 100vw" data-parallax /></figure>
+              {sidePhoto && <figure class="moment__side" data-reveal><Image src={sidePhoto} alt="" widths={[320, 560]} sizes="(min-width: 52rem) 14rem, 45vw" /></figure>}
+            </div>
+            <p class="moment__desc" data-reveal>{desc}</p>
+          </div>
+        </section>
+      )}
+    </>
+  ) : (
+    <>
+      <section class="pick" id="flavors" aria-labelledby="pick-title">
+        <div class="container">
+          <h2 id="pick-title" data-reveal>{flavorsTitle}</h2>
+          <div class="pick__grid">
+            {lineFlavors.map((f: any) => <FlavorCard locale={locale} kind="flavors" it={f} />)}
+          </div>
+        </div>
+      </section>
+      <section class="facts" style={themeStyle}>
+        <div class="container facts__grid">
+          {media.photos.length > 0 ? (
+            <div class="moment__photos">
+              <figure class="moment__main"><Image src={media.photos[0]} alt={`Fruitique ${item.en}`} widths={[640, 1000, 1400]} sizes="(min-width: 52rem) 36rem, 100vw" data-parallax /></figure>
+              {media.photos[1] && <figure class="moment__side" data-reveal><Image src={media.photos[1]} alt="" widths={[320, 560]} sizes="(min-width: 52rem) 14rem, 45vw" /></figure>}
+            </div>
+          ) : (
+            <div class="lineup">
+              {lineup.map((m) => <Image src={m} alt="" widths={[240, 400]} sizes="(min-width: 52rem) 12rem, 40vw" data-reveal />)}
+            </div>
+          )}
+          <div class="facts__txt" data-reveal>
+            <p class="facts__size">{item.size}</p>
+            <p class="facts__notes">{lineNotes}</p>
+          </div>
+        </div>
+      </section>
+    </>
+  )}
+      <section class="more" id="more">
+    <div class="container">
+      <h2 data-reveal>{isFlavor ? t('detail.moreFlavors') : t('detail.moreProducts')}</h2>
+      <div class="more__grid">
+        {(isFlavor ? moreFlavors : moreLines).map((f: any) => <FlavorCard locale={locale} kind={kind} it={f} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .page-hero { background: var(--bg); color: var(--text, var(--ink)); min-height: calc(100svh - 4.5rem); display: grid; align-items: center; padding-block: 3rem; overflow: clip; }
+  .grid { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 52rem) { .grid { grid-template-columns: 1.2fr 1fr; } }
+  h1 { color: var(--ink); font: italic 700 clamp(2.5rem, 5.2vw, 5rem) var(--font-accent); line-height: 1; margin-bottom: .3em; overflow-wrap: anywhere; }
+  .desc { font-size: clamp(1.1rem, 2vw, 1.4rem); max-width: 30rem; margin: 0 0 2rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; }
+  .btn--cta { background: var(--text, var(--ink)); color: var(--bg); }
+  .back { color: inherit; font-weight: 600; text-underline-offset: 5px; }
+  .stage { display: grid; place-items: center; }
+  .stage :global(.art) { width: clamp(9rem, 30vw, 17rem); height: auto; transform: rotate(8deg); filter: drop-shadow(0 22px 0 rgb(0 0 0 / .14)); }
+  .stage :global(.art.real) { width: min(135%, 44rem); max-width: none; transform: none; max-height: 82svh; object-fit: contain; filter: drop-shadow(0 26px 14px rgb(0 0 0 / .22)); position: relative; z-index: 0; }
+  .stage :global(.cup) { position: absolute; width: clamp(5rem, 14vw, 8.5rem); height: auto; right: -3%; bottom: -2%; z-index: 2; transform: rotate(10deg); filter: drop-shadow(0 12px 8px rgb(0 0 0 / .2)); }
+  .stage { position: relative; }
+  .more { padding-block: clamp(3rem, 8vw, 5rem); }
+  .more h2 { font-size: clamp(1.4rem, 3vw, 2rem); color: var(--fq-red); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .lines { padding-block: clamp(3rem, 8vw, 5.5rem); }
+  .lines h2, .more h2 { font-size: clamp(1.8rem, 4vw, 3rem); color: var(--fq-red); margin: 0 0 1.5rem; }
+  .lines__grid { display: grid; gap: 1rem; }
+  @media (min-width: 52rem) { .lines__grid { grid-template-columns: repeat(3, 1fr); } }
+  .line { display: grid; grid-template-columns: 1fr; align-content: start; text-align: center; gap: 1rem; padding: 1.5rem; border-radius: var(--radius); background: var(--bg); color: var(--ink); text-decoration: none; overflow: hidden; transition: transform .25s ease; }
+  .line:hover, .line:focus-visible { transform: translateY(-6px); }
+  .line__img { display: grid; place-items: center; }
+  .line__img :global(img), .line__img :global(.art) { width: 100%; max-height: 13rem; height: auto; object-fit: contain; filter: drop-shadow(0 14px 8px rgb(0 0 0 / .22)); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+  .line:hover .line__img :global(img), .line:hover .line__img :global(.art) { transform: rotate(-5deg) scale(1.06); }
+  .line__txt { display: flex; flex-direction: column; gap: .4rem; }
+  .line__name { font: italic 700 clamp(1.7rem, 3vw, 2.4rem)/1.05 var(--font-accent); }
+  .line__notes { font-size: .98rem; line-height: 1.4; }
+  .go { font-weight: 700; font-size: .95rem; margin-top: .4rem; }
+  .moment { background: var(--bg); color: var(--text, var(--ink)); padding-block: clamp(3rem, 8vw, 6rem); overflow: clip; }
+  .moment__grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 52rem) { .moment__grid { grid-template-columns: 1.1fr 1fr; gap: 4rem; } }
+  .moment__photos { position: relative; padding-bottom: 2.5rem; }
+  .moment__main { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); box-shadow: 0 24px 40px -18px rgb(0 0 0 / .35); }
+  .moment__main :global(img), .moment__side :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .moment__side { position: absolute; right: -1rem; bottom: 0; width: 38%; aspect-ratio: 1; margin: 0; overflow: hidden; border-radius: var(--radius); box-shadow: 0 18px 30px -12px rgb(0 0 0 / .4); rotate: 4deg; }
+  .moment__desc { margin: 0; font: italic 700 clamp(1.9rem, 4vw, 3.2rem)/1.12 var(--font-accent); }
+  .cta { background: var(--bg); color: var(--ink); padding-block: clamp(3rem, 8vw, 6rem); }
+  .cta__grid { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 52rem) { .cta__grid { grid-template-columns: 1.1fr 1fr; gap: 4rem; } }
+  .cta h2 { margin: 0; font: 800 clamp(2.2rem, 5.5vw, 4rem)/1.05 var(--font-display); max-width: 14ch; }
+  .cta form { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .cta input { flex: 1 1 14rem; min-width: 0; padding: .95rem 1.2rem; border: 0; border-radius: var(--radius-pill); font: inherit; background: var(--fq-white); color: var(--fq-ink); }
+  .cta input:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .cta__form p { margin: 1.25rem 0 .5rem; font-weight: 600; }
+  .cta ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+  .cta ul { gap: .6rem; }
+  .cta ul a { display: inline-block; text-decoration: none; transition: transform .2s ease; }
+  .cta ul a:hover, .cta ul a:focus-visible { transform: translateY(-3px); }
+  .more__grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 40rem) { .more__grid { gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); } }
+  /* Páginas de línea de producto */
+  .page-hero[data-kind='products'] .grid { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 52rem) { .page-hero[data-kind='products'] .grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3rem; } }
+  .page-hero[data-kind='products'] .stage { min-width: 0; }
+  .page-hero[data-kind='products'] .stage :global(.art.real) { width: 100%; max-width: 32rem; max-height: 60svh; }
+  .pick { padding-block: clamp(3rem, 8vw, 5.5rem); }
+  .pick h2 { font-size: clamp(1.8rem, 4vw, 3rem); color: var(--fq-red); margin: 0 0 1.5rem; }
+  .pick__grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 40rem) { .pick__grid { gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); } }
+  .facts { background: var(--bg); color: var(--text, var(--ink)); padding-block: clamp(3rem, 8vw, 6rem); overflow: clip; }
+  .facts__grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 52rem) { .facts__grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 3rem; } }
+  .facts__size { margin: 0; white-space: nowrap; font: 800 clamp(4rem, 12vw, 8rem)/1 var(--font-display); color: var(--ink); }
+  .facts__notes { margin: .5rem 0 0; font: italic 700 clamp(1.5rem, 3vw, 2.4rem)/1.2 var(--font-accent); max-width: 28ch; }
+  .facts .moment__photos { position: relative; padding-bottom: 2.5rem; }
+  .facts .moment__main { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); box-shadow: 0 24px 40px -18px rgb(0 0 0 / .35); }
+  .facts .moment__main :global(img), .facts .moment__side :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .facts .moment__side { position: absolute; right: -1rem; bottom: 0; width: 38%; aspect-ratio: 1; margin: 0; overflow: hidden; border-radius: var(--radius); box-shadow: 0 18px 30px -12px rgb(0 0 0 / .4); rotate: 4deg; }
+  .lineup { display: flex; align-items: center; justify-content: center; max-width: 36rem; margin-inline: auto; }
+  .lineup :global(img) { flex: 1 1 0; min-width: 0; height: auto; margin-inline: -.2rem; filter: drop-shadow(0 16px 10px rgb(0 0 0 / .22)); }
+  .lineup :global(img:nth-child(odd)) { rotate: -3deg; }
+  .lineup :global(img:nth-child(even)) { rotate: 3deg; }
+</style>
