@@ -218,7 +218,12 @@ const faqLd = {
   .stage-pinned .stage__art { display: grid; place-items: center; position: relative; width: min(100%, 42rem); margin-inline: auto; aspect-ratio: 1.15; }
   @media (min-width: 52rem) { .stage-pinned .stage__art { aspect-ratio: 1; } }
   /* móvil: el envase se encoge con la altura visible (Safari con barras ≈ 659px en iPhone 15 Pro) para que el botón no quede cortado */
-  @media (max-width: 51.99rem) { .stage-pinned .stage__art { width: min(100%, 42rem, calc((100svh - 24.5rem) * 1.15)); } }
+  @media (max-width: 51.99rem) {
+    /* hueco bajo el header para que la tapa y los detalles que salen del envase no se corten con él */
+    .stage.stage-pinned { padding-top: 6.75rem; }
+    .stage-pinned .stage__art { width: min(100%, 42rem, calc((100svh - 25rem) * 1.15)); }
+    .stage-pinned .stage__list { margin: .5rem 0 1rem; }
+  }
   .stage__pop { width: 96%; display: grid; filter: drop-shadow(0 26px 14px rgb(0 0 0 / .22)); }
   .stage__pint { grid-area: 1 / 1; display: grid; position: relative; }
   .stage__pint :global(img) { grid-area: 1 / 1; width: 100%; height: auto; }
