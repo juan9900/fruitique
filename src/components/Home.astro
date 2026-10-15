@@ -163,7 +163,7 @@ const faqLd = {
 
 <style>
   /* ── Hero ── */
-  .hero { background: var(--fq-white); color: var(--fq-red); padding-block: clamp(2.5rem, 8vw, 6rem); overflow: clip; }
+  .hero { background: var(--fq-white); color: var(--fq-ui); padding-block: clamp(2.5rem, 8vw, 6rem); overflow: clip; }
   .grid { display: grid; gap: 2.5rem; align-items: center; }
   @media (min-width: 52rem) { .grid { grid-template-columns: 1.2fr 1fr; } }
   h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); }
@@ -178,7 +178,7 @@ const faqLd = {
     .visual :global(.f3) { left: 48%; }
   }
   .finder { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
-  .finder input { flex: 1 1 14rem; padding: .8rem 1.2rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-red); font: 400 1rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
+  .finder input { flex: 1 1 14rem; padding: .8rem 1.2rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-ui); font: 400 1rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
   .visual { position: relative; aspect-ratio: 1; display: grid; place-items: center; }
 
   /* Abanico de envases con la sonrisa del ícono */
@@ -245,7 +245,7 @@ const faqLd = {
   /* ── Líneas de producto ── */
   .lines { background: var(--fq-cream); padding-block: clamp(3.5rem, 9vw, 7rem) 0; overflow: clip; }
   .lines__head { margin-bottom: clamp(2rem, 5vw, 3rem); }
-  .lines__head h2 { font-size: clamp(2.2rem, 5.6vw, 4rem); color: var(--fq-red); max-width: 24ch; }
+  .lines__head h2 { font-size: clamp(2.2rem, 5.6vw, 4rem); color: var(--fq-ui); max-width: 24ch; }
   .lines__head p { font-size: 1.15rem; max-width: 34rem; margin: 0; }
 
   /* Cuatro paneles pegados a todo el ancho, separados por diagonales (recorte con clip-path; el panel siguiente se monta --s sobre el anterior para que no quede hueco) */
@@ -275,17 +275,17 @@ const faqLd = {
   .faq { padding-block: clamp(3.5rem, 9vw, 7rem); }
   .faq__in { display: grid; gap: 2rem; }
   @media (min-width: 52rem) { .faq__in { grid-template-columns: 1fr 1.6fr; align-items: start; } }
-  .faq h2 { font-size: clamp(2rem, 5vw, 3.4rem); color: var(--fq-red); max-width: 12ch; }
-  .faq details { border-bottom: 2px solid color-mix(in srgb, var(--fq-red) 35%, transparent); overflow: hidden; }
+  .faq h2 { font-size: clamp(2rem, 5vw, 3.4rem); color: var(--fq-ui); max-width: 12ch; }
+  .faq details { border-bottom: 2px solid color-mix(in srgb, var(--fq-ui) 35%, transparent); overflow: hidden; }
   .faq summary { list-style: none; cursor: pointer; padding: 1.1rem 2.5rem 1.1rem 0; font: 700 1.2rem/1.3 var(--font-body); position: relative; }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: '+'; position: absolute; right: 0; top: 50%; translate: 0 -50%; font-size: 1.8rem; color: var(--fq-red); transition: rotate .35s cubic-bezier(.34, 1.56, .64, 1); }
+  .faq summary::after { content: '+'; position: absolute; right: 0; top: 50%; translate: 0 -50%; font-size: 1.8rem; color: var(--fq-ui); transition: rotate .35s cubic-bezier(.34, 1.56, .64, 1); }
   .faq details[open] summary::after, .faq details.is-open summary::after { rotate: 135deg; }
   .faq details:not(.is-open)[open] summary::after { rotate: 0deg; }
   .faq__a p { margin: 0 0 1.25rem; max-width: 40rem; }
 
   /* ── Banda final ── */
-  .band { background: var(--fq-red); color: var(--fq-white); text-align: center; padding-block: clamp(3.5rem, 10vw, 7rem); overflow: clip; }
+  .band { background: var(--fq-ui); color: var(--fq-white); text-align: center; padding-block: clamp(3.5rem, 10vw, 7rem); overflow: clip; }
   .band h2 { font-size: clamp(2rem, 6vw, 4rem); max-width: 22ch; margin-inline: auto; margin-bottom: 1.5rem; }
   :global(.motion-ok) .band [data-split-words] { visibility: hidden; animation: fq-show 0s 2.5s forwards; }
 </style>

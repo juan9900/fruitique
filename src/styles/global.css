@@ -28,9 +28,9 @@ a { color: inherit; }
   transition: transform .15s ease;
 }
 .btn:hover { transform: translateY(-2px) scale(1.03); }
-.btn--yellow { background: var(--fq-yellow); color: var(--fq-red); }  /* CTA principal sobre rojo */
-.btn--white { background: var(--fq-white); color: var(--fq-red); }
-.btn--red { background: var(--fq-red); color: var(--fq-white); }
+.btn--yellow { background: var(--fq-yellow); color: var(--fq-ui); }  /* CTA principal sobre rojo */
+.btn--white { background: var(--fq-white); color: var(--fq-ui); }
+.btn--red { background: var(--fq-ui); color: var(--fq-white); }
 
 /* Motion: ocultar solo lo que GSAP va a revelar, con red de seguridad si el JS falla. */
 @keyframes fq-show { to { visibility: visible; } }

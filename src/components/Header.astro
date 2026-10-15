@@ -33,7 +33,7 @@ const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereTo
   </div>
 </header>
 <style>
-  .site-header { background: var(--fq-red); color: var(--fq-white); position: sticky; top: 0; z-index: 10; }
+  .site-header { background: var(--fq-ui); color: var(--fq-white); position: sticky; top: 0; z-index: 10; }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }
   .logo { text-decoration: none; font: 800 1.9rem var(--font-display); letter-spacing: -.02em; }
   .nav { display: flex; align-items: center; gap: 1.1rem; white-space: nowrap; }
@@ -47,7 +47,7 @@ const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereTo
     .burger { display: block; cursor: pointer; padding: .75rem; }
     .burger span, .burger span::before, .burger span::after { display: block; width: 1.6rem; height: 3px; background: var(--fq-white); border-radius: 2px; position: relative; content: ''; }
     .burger span::before { position: absolute; top: -7px; } .burger span::after { position: absolute; top: 7px; }
-    .nav { display: none; position: absolute; inset: 100% 0 auto 0; flex-direction: column; align-items: stretch; background: var(--fq-red); padding: 1rem var(--gutter) 1.5rem; gap: 1rem; }
+    .nav { display: none; position: absolute; inset: 100% 0 auto 0; flex-direction: column; align-items: stretch; background: var(--fq-ui); padding: 1rem var(--gutter) 1.5rem; gap: 1rem; }
     .nav-toggle:checked ~ .nav { display: flex; }
     .nav-toggle:focus-visible ~ .burger { outline: 3px solid var(--fq-yellow); }
   }

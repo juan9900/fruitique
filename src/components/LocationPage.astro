@@ -195,18 +195,18 @@ const directions = (s: Store) => `https://www.google.com/maps/dir/?api=1&destina
 </script>
 <style>
   .intro { padding-block: clamp(2.5rem, 7vw, 5rem) 1.5rem; }
-  .intro h1 { font-size: clamp(2.4rem, 7vw, 4.8rem); color: var(--fq-red); max-width: 16ch; }
+  .intro h1 { font-size: clamp(2.4rem, 7vw, 4.8rem); color: var(--fq-ui); max-width: 16ch; }
   .zipform { display: flex; flex-wrap: wrap; gap: .75rem; max-width: 34rem; }
-  .zipform input { flex: 1 1 12rem; padding: .85rem 1.3rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-red); font: 400 1.05rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
-  .btn--ghost { background: transparent; color: var(--fq-red); box-shadow: inset 0 0 0 2px var(--fq-red); }
+  .zipform input { flex: 1 1 12rem; padding: .85rem 1.3rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-ui); font: 400 1.05rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
+  .btn--ghost { background: transparent; color: var(--fq-ui); box-shadow: inset 0 0 0 2px var(--fq-ui); }
   .zipmsg { margin: .8rem 0 0; font-weight: 600; min-height: 1.5em; }
-  li :global(.dist) { font-weight: 600; color: var(--fq-red); opacity: 1; }
+  li :global(.dist) { font-weight: 600; color: var(--fq-ui); opacity: 1; }
   [hidden] { display: none !important; }
   .lead { font-size: 1.2rem; max-width: 38rem; margin: 0 0 1.5rem; }
   .brand { margin-bottom: 1rem; }
   .locs { padding-block: 1rem clamp(3rem, 8vw, 6rem); }
   .block + .block { margin-top: 2rem; }
-  h2 { font-size: 1.5rem; color: var(--fq-red); }
+  h2 { font-size: 1.5rem; color: var(--fq-ui); }
   h2 a { text-decoration: none; }
   h2 a:hover { text-decoration: underline; text-underline-offset: 5px; }
   ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); }
@@ -214,5 +214,5 @@ const directions = (s: Store) => `https://www.google.com/maps/dir/?api=1&destina
   li div { display: grid; }
   li strong { font-weight: 700; }
   li span { font-size: .9rem; opacity: .8; }
-  li a { color: var(--fq-red); font-weight: 700; white-space: nowrap; text-underline-offset: 4px; }
+  li a { color: var(--fq-ui); font-weight: 700; white-space: nowrap; text-underline-offset: 4px; }
 </style>

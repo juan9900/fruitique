@@ -8,6 +8,7 @@
 
 :root {
   --fq-red: #ed1d24;
+  --fq-ui: #27bdbe; /* PRUEBA: color de la interfaz del sitio (antes --fq-red). Los sabores/envases siguen con --fq-red */
   --fq-yellow: #ffd400;
   --fq-cream: #ffead5;
   --fq-turquoise: #27bdbe;

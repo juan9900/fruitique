@@ -6,6 +6,7 @@ import '@fontsource/poppins/800.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ColorSwitch from '../components/ColorSwitch.astro';
 import { alternatePath, ES_ENABLED, locales, useTranslations, type Locale } from '../i18n/ui';
 
 interface Props {
@@ -41,6 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
+    <script is:inline>try{var u=localStorage.getItem('fq-ui');if(u)document.documentElement.style.setProperty('--fq-ui',u)}catch(e){}</script>
     <script is:inline>if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion-ok');</script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {ES_ENABLED && locales.map((l) => (
@@ -57,6 +59,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <Header locale={locale} switchHref={altPath(other)} />
     <main id="main"><slot /></main>
     <Footer locale={locale} switchHref={altPath(other)} />
+    <ColorSwitch />
     <script>import '../scripts/motion';</script>
   </body>
 </html>
