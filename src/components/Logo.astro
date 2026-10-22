@@ -3,9 +3,10 @@
  * Logo oficial de Fruitique, vectorizado del archivo de la clienta
  * (`src/assets/brand/fruitique-logo-source.png`); ver `docs/ASSETS.md`.
  * Nunca sustituir por texto.
- *  - `onRed`: para el header y el footer (fondo rojo): cuerpo en blanco,
- *    sonrisa calada y hoja + corazón en turquesa.
- *  - `color`: versión original roja y turquesa, para fondos claros.
+ *  - `onRed`: para el header y el footer (fondo rojo): cuerpo y "Artisan" en blanco,
+ *    sonrisa calada y hoja, corazón e "Ice cream" en amarillo (logo nuevo, 2026-10-22).
+ *  - `color`: para fondos claros: cuerpo, wordmark y bajada en rojo, hoja y corazón en
+ *    amarillo. Hoy no la usa ninguna página.
  */
 interface Props { variant?: 'onRed' | 'color'; class?: string; eager?: boolean }
 const { variant = 'onRed', class: cls, eager = false } = Astro.props;

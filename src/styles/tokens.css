@@ -17,6 +17,7 @@
   --fq-coconut-light: #c9a27a;
   --fq-tamarind: #7a4a26; /* marrón tamarindo (fondo) */
   --fq-leaf: #9bd84e; /* verde del sabor Tamarindo, solo detalles */
+  --fq-mango: #ffa51f; /* naranja mango: fondo del sabor Mango en el escenario de la home (el texto va en --fq-ink) */
   --fq-ink: #2a0a0b; /* texto oscuro derivado del rojo, para fondos claros/amarillos */
 
   /* Tipografía: Como (display), Rude Slab (acento), Poppins (texto) */

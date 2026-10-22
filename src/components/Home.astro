@@ -241,10 +241,15 @@ const faqLd = {
     .stage-pinned .stage__art { width: min(100%, 42rem, calc((100svh - 25rem) * 1.15)); }
     .stage-pinned .stage__list { margin: .5rem 0 1rem; }
   }
-  .stage__pop { width: 96%; display: grid; filter: drop-shadow(0 26px 14px rgb(0 0 0 / .22)); }
+  /* 76 % y no el ancho entero: los pints nuevos salen completos en la foto (los viejos venían recortados por abajo),
+     así que a 96 % llenaban todo el escenario y se veían mucho más grandes que antes. */
+  .stage__pop { width: 76%; display: grid; filter: drop-shadow(0 26px 14px rgb(0 0 0 / .22)); }
   .stage__pint { grid-area: 1 / 1; display: grid; position: relative; }
   .stage__pint :global(img) { grid-area: 1 / 1; width: 100%; height: auto; }
-  .stage__pint :global(.stage__tub) { clip-path: inset(calc(var(--cut) - .4%) 0 0 0); }
+  /* Tapa y cuerpo se cortan exactamente en la junta (`--cut`), sin solape. El faldón de la tapa es más ancho que el cuerpo:
+     si el cuerpo empezara más arriba, al abrirse asomarían dos "orejas" a los lados; si la tapa bajara de la junta, se llevaría
+     un escalón de cuerpo en las puntas. Como los dos recortes salen de la misma imagen y en la misma posición, al cerrarse encajan. */
+  .stage__pint :global(.stage__tub) { clip-path: inset(var(--cut) 0 0 0); }
   .stage__pint :global(.stage__lid) { clip-path: inset(0 0 calc(100% - var(--cut)) 0); transform-origin: 50% 9%; }
   .stage__bits, .bits { position: absolute; inset: 0; pointer-events: none; }
   .bit { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); }

@@ -120,18 +120,26 @@ export const bitKinds: Record<string, BitKind[]> = {
   strawberry: ['fruit', 'seed', 'leaf', 'drop', 'leaf', 'seed', 'dot', 'ring'],
   'passion-fruit': ['fruit', 'drop', 'seed', 'ring', 'drop', 'leaf', 'dot', 'seed'],
   guanabana: ['fruit', 'leaf', 'seed', 'ring', 'seed', 'drop', 'leaf', 'dot'],
+  // Tres Leches no tiene foto de fruta (`texture`), así que su detalle grande es una gota de leche, no un 'fruit'.
+  'tres-leches': ['drop', 'ring', 'dot', 'drop', 'seed', 'dot', 'ring', 'drop'],
+  mango: ['fruit', 'drop', 'leaf', 'seed', 'drop', 'ring', 'dot', 'leaf'],
   coconut: ['fruit', 'leaf', 'ring', 'drop', 'leaf', 'dot', 'ring', 'drop'],
 };
 
 /**
- * Colores del escenario de sabores de la home (fondo + detalle), pedidos por el dueño:
- * rojo/blanco · amarillo/morado · turquesa/blanco (guanábana) · blanco/turquesa (coco).
+ * Colores del escenario de sabores de la home (fondo + detalle), pedidos por el dueño (2026-10-22):
+ * rojo/blanco (fresa) · amarillo/morado (maracuyá) · crema/rojo (tres leches) · naranja mango/tinta (mango) · blanco/turquesa (coco).
+ * `ink` pinta el titular, las semillas, los aros y los puntos; `text` el párrafo y el botón (ahí hace falta AA de texto pequeño);
+ * `accent` las gotas, hojas y círculos sueltos. Guanábana salió del escenario pero sigue en el catálogo.
  */
 export const stageThemes: Record<string, { bg: string; ink: string; text: string; pop: string; accent: string }> = {
   strawberry: { bg: 'var(--fq-red)', ink: 'var(--fq-white)', text: 'var(--fq-white)', pop: 'var(--fq-white)', accent: 'var(--fq-yellow)' },
   'passion-fruit': { bg: 'var(--fq-yellow)', ink: 'var(--fq-purple)', text: 'var(--fq-purple)', pop: 'var(--fq-purple)', accent: 'var(--fq-purple)' },
-  // turquesa/blanco: el titular va en blanco; el texto pequeño y el botón en tinta oscura para mantener contraste AA.
-  guanabana: { bg: 'var(--fq-turquoise)', ink: 'var(--fq-white)', text: 'var(--fq-ink)', pop: 'var(--fq-white)', accent: 'var(--fq-white)' },
+  // crema/rojo: el titular en rojo (AA de texto grande sobre crema); el texto pequeño y el botón en tinta oscura.
+  // Los detalles van en el marrón de marca, que es el tono del propio tres leches y se lee sobre crema.
+  'tres-leches': { bg: 'var(--fq-cream)', ink: 'var(--fq-red)', text: 'var(--fq-ink)', pop: 'var(--fq-white)', accent: 'var(--fq-coconut)' },
+  // naranja mango: titular y texto en tinta oscura; los detalles en blanco, que sobre el naranja salpica bien.
+  mango: { bg: 'var(--fq-mango)', ink: 'var(--fq-ink)', text: 'var(--fq-ink)', pop: 'var(--fq-white)', accent: 'var(--fq-white)' },
   // blanco/turquesa: el titular va en turquesa; el texto pequeño y el botón en tinta oscura.
   coconut: { bg: 'var(--fq-white)', ink: 'var(--fq-turquoise)', text: 'var(--fq-ink)', pop: 'var(--fq-turquoise)', accent: 'var(--fq-turquoise)' },
 };

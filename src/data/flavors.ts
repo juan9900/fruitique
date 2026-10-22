@@ -68,5 +68,6 @@ export const flavors: Flavor[] = [
 
 export const flavorSlug = (f: Flavor, locale: 'en' | 'es') => (locale === 'es' ? f.slugEs : f.slug);
 
-const featuredSlugs = ['strawberry', 'passion-fruit', 'guanabana', 'coconut'];
+/** Sabores del escenario fijado de la home, en el orden que pidió el dueño (2026-10-22): los cuatro pints nuevos y el de Coco. */
+const featuredSlugs = ['strawberry', 'passion-fruit', 'tres-leches', 'mango', 'coconut'];
 export const featured = featuredSlugs.map((s) => flavors.find((f) => f.slug === s)!);

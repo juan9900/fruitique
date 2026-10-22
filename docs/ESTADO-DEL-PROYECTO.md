@@ -1,6 +1,6 @@
 # Estado del proyecto Fruitique
 
-*Última actualización: 2026-10-21 (logo oficial en header, footer y favicon; página Become a Partner).*
+*Última actualización: 2026-10-22 (escenario de sabores de la home con 5 pints nuevos; logo y favicon en amarillo).*
 
 ## Regla de trabajo (importante)
 **No se hace la optimización ni la revisión final** (accesibilidad, rendimiento, Lighthouse, pruebas en dispositivos, preparación y publicación en Netlify) **hasta que el usuario diga explícitamente que el contenido está listo.** Aún falta mucho contenido. Mientras tanto, solo se avanza en contenido, estructura y funciones. No proponer esa fase por iniciativa propia.
@@ -20,7 +20,8 @@ Los detalles viven en `CLAUDE.md` (reglas), `PLAN-SITIO.md`, `MANUAL-DE-MARCA.md
 - **Localizador de ubicaciones** (`/where-to-buy/`, `/es/donde-comprar/`): 1.333 ubicaciones = lista del sitio viejo (865) combinada con el mapa comercial 2026 de la clienta (+478 nuevas, incluye 162 Walmart; 9 inactivas quitadas; 324 ya estaban), búsqueda por ZIP o ciudad, la más cercana destacada, lista, filtro por tienda, "usar mi ubicación" y mapa MapLibre/OpenFreeMap con estilo de la marca.
 - **Páginas SEO**: 60 ciudades (con 3 o más ubicaciones) y 5 cadenas (con 4 o más), en ambos idiomas, y un bloque de exploración por tienda y por ciudad en la página del localizador.
 - **Nuestra Historia** y **Contacto** (formulario preparado para Netlify Forms).
-- **Logo oficial** (2026-10-21): el usuario entregó el logo horizontal en PNG y se vectorizó con `potrace` por capas de color (`public/brand/`). El header y el footer usan la versión invertida (blanco con hoja y corazón turquesa, sonrisa calada) vía `Logo.astro`; el favicon, el `.ico` y el `apple-touch-icon` salen del isotipo. Ya no hay texto provisional en ningún lado.
+- **Escenario de sabores de la home** (2026-10-22, pedido del dueño): pasa a 5 sabores en orden —Strawberry, Passion Fruit, Tres Leches, Mango y Coconut— y deja de usar los pints viejos: los cuatro primeros van con la foto del envase nuevo (se añadió `pint-tres-leches`) y Coco con un recorte de su foto original. Mango estrena un color propio (`--fq-mango #FFA51F`) y Tres Leches va en crema. Guanábana sale del escenario pero sigue en el catálogo y con su página. De rebote, `/flavors/tres-leches/` ya muestra el envase real en vez de la ilustración provisional.
+- **Logo oficial** (2026-10-21, actualizado el 2026-10-22 a la versión amarilla: hoja, corazón e "Ice cream" en `#FFD400`): el usuario entregó el logo horizontal en PNG y se vectorizó con `potrace` por capas de color (`public/brand/`). El header y el footer usan la versión invertida (blanco con hoja, corazón e "Ice cream" en amarillo, sonrisa calada) vía `Logo.astro`; el favicon, el `.ico` y el `apple-touch-icon` salen del isotipo. Ya no hay texto provisional en ningún lado.
 - **Become a Partner** (`/become-a-partner/`, 2026-10-21, pedido de la clienta): captación de comercios en Florida. Hero con la nevera surtida, los tres argumentos (congelador sin costo, solo invertir en producto, distribución en toda Florida), tipos de negocio, los 3 congeladores con medidas, logos de clientes y formulario comercial (Netlify Forms, `form-name="partner"`). Entra en el menú como 6º ítem y se enlaza desde la home, el localizador, las 65 páginas de ciudad/cadena y el footer (`PartnerCta.astro`).
 - **Regla de diseño**: sin "sellos de Claude" (marquesinas, títulos pequeños sobre títulos grandes, badges, bordes laterales, numeración 01-02-03). Está en `CLAUDE.md`.
 
