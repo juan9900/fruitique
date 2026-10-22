@@ -33,7 +33,7 @@ const more = list.filter((x) => x !== item).slice(0, isFlavor ? 4 : 3);
 const lines = isFlavor ? linesOfFlavor(item.slug).map((l) => {
   const pm = productMedia[l.product.slug];
   const img = media.byLine?.[l.product.kind] ?? (l.product.kind === 'pint' && media.lidCut ? media.pack : l.product.kind === 'squarebar' && media.cup ? media.cup : pm?.pack);
-  return { name: l.label ?? l.product[locale], size: l.product.size, notes: locale === 'en' ? l.product.notesEn : l.product.notesEs, kind: l.product.kind, bg: l.product.bg, ink: l.product.ink, img, href: `${localePath('products', locale)}${productSlug(l.product, locale)}/` };
+  return { name: l.label ?? l.product[locale], size: l.product.size, notes: locale === 'en' ? l.product.notesEn : l.product.notesEs, kind: l.product.kind, ...(l.product.bg === 'var(--fq-cream)' ? { bg: 'var(--fq-mango)', ink: 'var(--fq-ink)' } : { bg: l.product.bg, ink: l.product.ink }), img, href: `${localePath('products', locale)}${productSlug(l.product, locale)}/` };
 }) : [];
 const linesTitle = locale === 'en' ? `Find ${name} as` : `Encuentra ${name} en`;
 const hasPhoto = media.photos.length > 0 || !!media.texture;
@@ -133,7 +133,7 @@ const crumbs = {
             <h2 id="lines-title" data-reveal>{linesTitle}</h2>
             <div class="lines__grid">
               {lines.map((l) => (
-                <a class="line" href={l.href} data-reveal style={`--bg:${l.bg};--ink:${l.ink}`}>
+                <a class="line" data-cream={l.bg === 'var(--fq-cream)' ? '' : undefined} href={l.href} data-reveal style={`--bg:${l.bg};--ink:${l.ink}`}>
                   <span class="line__img">
                     {l.img ? <Image src={l.img} alt="" widths={[300, 500]} sizes="(min-width: 52rem) 18rem, 60vw" /> : <ProductArt kind={l.kind} class="art" />}
                   </span>
@@ -227,7 +227,10 @@ const crumbs = {
   .lines h2, .more h2 { font-size: clamp(1.8rem, 4vw, 3rem); color: var(--fq-red); margin: 0 0 1.5rem; }
   .lines__grid { display: grid; gap: 1rem; }
   @media (min-width: 52rem) { .lines__grid { grid-template-columns: repeat(3, 1fr); } }
-  .line { display: grid; grid-template-columns: 1fr; align-content: start; text-align: center; gap: 1rem; padding: 1.5rem; border-radius: var(--radius); background: var(--bg); color: var(--ink); text-decoration: none; overflow: hidden; transition: transform .25s ease; }
+  .line { display: grid; grid-template-columns: 1fr; grid-template-rows: 1fr auto; align-content: stretch; text-align: center; gap: 1rem; padding: 1.5rem; border-radius: var(--radius); background: var(--bg); color: var(--ink); text-decoration: none; overflow: hidden; transition: transform .25s ease; }
+  /* fondo crema = fondo de la página: contorno para que la card se vea (igual que en FlavorCard) */
+  .line { position: relative; }
+  .line[data-cream]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 3px var(--fq-red); pointer-events: none; }
   .line:hover, .line:focus-visible { transform: translateY(-6px); }
   .line__img { display: grid; place-items: center; }
   .line__img :global(img), .line__img :global(.art) { width: 100%; max-height: 13rem; height: auto; object-fit: contain; filter: drop-shadow(0 14px 8px rgb(0 0 0 / .22)); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
