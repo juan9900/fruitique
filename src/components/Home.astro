@@ -238,8 +238,11 @@ const faqLd = {
   @media (max-width: 51.99rem) {
     /* hueco bajo el header para que la tapa y los detalles que salen del envase no se corten con él */
     .stage.stage-pinned { padding-top: 9.25rem; }
-    .stage-pinned .stage__art { width: min(100%, 42rem, calc((100svh - 27.5rem) * 1.15)); }
+    .stage-pinned .stage__art { width: min(100%, 42rem, calc((100svh - 29.25rem) * 1.15)); }
     .stage-pinned .stage__list { margin: .5rem 0 1rem; }
+    /* los puntos de paginación van debajo del envase, no encima de su base */
+    .stage-pinned .stage__sticky { gap: 2.25rem; }
+    .stage-pinned .stage__dots { bottom: -1.75rem; }
   }
   /* 76 % y no el ancho entero: los pints nuevos salen completos en la foto (los viejos venían recortados por abajo),
      así que a 96 % llenaban todo el escenario y se veían mucho más grandes que antes. */
@@ -264,6 +267,7 @@ const faqLd = {
   @media (max-width: 51.99rem) {
     .bit--desk { display: none; } .bit { scale: .62; }
     /* móvil: el círculo de fruta es más chico (≈3.6rem a la vista) y va en la esquina, fuera del logo del envase */
+    .bit:nth-child(6) { left: 93%; top: 80%; }
     .bit--fruit { left: 15%; top: 11%; width: 5.8rem; height: 5.8rem; margin: -2.9rem 0 0 -2.9rem; }
   }
   .stage__more { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
