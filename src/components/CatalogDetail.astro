@@ -166,7 +166,7 @@ const crumbs = {
         <div class="container">
           <h2 id="pick-title" data-reveal>{flavorsTitle}</h2>
           <div class="pick__grid">
-            {lineFlavors.map((f: any) => <FlavorCard locale={locale} kind="flavors" it={f} />)}
+            {lineFlavors.map((f: any) => <FlavorCard locale={locale} kind="flavors" line={item.kind} it={f} />)}
           </div>
         </div>
       </section>
@@ -270,6 +270,8 @@ const crumbs = {
   .pick { padding-block: clamp(3rem, 8vw, 5.5rem); }
   .pick h2 { font-size: clamp(1.8rem, 4vw, 3rem); color: var(--fq-red); margin: 0 0 1.5rem; }
   .pick__grid { display: grid; gap: .75rem; grid-template-columns: repeat(2, 1fr); }
+  .pick__grid :global(.card) { --label-h: 6.5rem; }
+  @media (min-width: 40rem) { .pick__grid :global(.card) { --label-h: 7.5rem; } }
   @media (min-width: 40rem) { .pick__grid { gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); } }
   .facts { background: var(--bg); color: var(--text, var(--ink)); padding-block: clamp(3rem, 8vw, 6rem); overflow: clip; }
   .facts__grid { display: grid; gap: 2.5rem; align-items: center; }

@@ -54,6 +54,7 @@ const crumbs = {
   .grid.products { grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); }
   @media (max-width: 40rem) {
     .grid.flavors { grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+    .grid.flavors :global(.card) { --label-h: 6.5rem; }
     .grid.flavors :global(.label) { padding: .7rem .8rem .85rem; }
     .grid.flavors :global(.name) { font-size: 1.15rem; }
     .grid.flavors :global(.go) { font-size: .8rem; }

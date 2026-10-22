@@ -10,6 +10,8 @@ const red: Theme = { bg: 'var(--fq-red)', ink: 'var(--fq-white)', pop: 'var(--fq
 const yellow: Theme = { bg: 'var(--fq-yellow)', ink: 'var(--fq-red)', pop: 'var(--fq-white)', accent: 'var(--fq-red)' };
 const turquoise: Theme = { bg: 'var(--fq-turquoise)', ink: 'var(--fq-ink)', pop: 'var(--fq-white)', accent: 'var(--fq-yellow)' };
 const purple: Theme = { bg: 'var(--fq-purple)', ink: 'var(--fq-white)', pop: 'var(--fq-cream)', accent: 'var(--fq-yellow)' };
+const mango: Theme = { bg: 'var(--fq-mango)', ink: 'var(--fq-ink)', pop: 'var(--fq-white)', accent: 'var(--fq-red)' };
+const caramel: Theme = { bg: 'var(--fq-coconut)', ink: 'var(--fq-white)', pop: 'var(--fq-cream)', accent: 'var(--fq-yellow)' };
 const cream: Theme = { bg: 'var(--fq-cream)', ink: 'var(--fq-red)', pop: 'var(--fq-white)', accent: 'var(--fq-red)' };
 
 export interface Flavor extends Theme {
@@ -25,7 +27,7 @@ export const flavors: Flavor[] = [
   { slug: 'coconut', slugEs: 'coco', en: 'Coconut', es: 'Coco', ...turquoise,
     descEn: 'Creamy, tropical and impossible to share. Pure coconut, the way you remember it.',
     descEs: 'Cremoso, tropical y difícil de compartir. Coco de verdad, como lo recuerdas.' },
-  { slug: 'passion-fruit', slugEs: 'maracuya', en: 'Passion Fruit', es: 'Maracuyá', ...yellow,
+  { slug: 'passion-fruit', slugEs: 'maracuya', en: 'Passion Fruit', es: 'Maracuyá', ...purple,
     descEn: 'Bright, bold and full of tropical attitude. One bite wakes everything up.',
     descEs: 'Brillante, intenso y con actitud tropical. Un bocado y todo despierta.' },
   { slug: 'cheese-guava', slugEs: 'queso-y-guayaba', en: 'Guava & Cheese', es: 'Queso y Guayaba', ...red,
@@ -40,10 +42,10 @@ export const flavors: Flavor[] = [
   { slug: 'strawberry', slugEs: 'fresa', en: 'Strawberry', es: 'Fresa', ...red,
     descEn: 'Ripe, juicy and a little imperfect, just like the good stuff.',
     descEs: 'Madura, jugosa y un poco imperfecta, como lo bueno de verdad.' },
-  { slug: 'dulce-de-leche', slugEs: 'dulce-de-leche', en: 'Dulce de Leche', es: 'Dulce de Leche', ...yellow,
+  { slug: 'dulce-de-leche', slugEs: 'dulce-de-leche', en: 'Dulce de Leche', es: 'Dulce de Leche', ...caramel,
     descEn: 'Golden, creamy and made for reward moments in the middle of the day.',
     descEs: 'Dorado, cremoso y hecho para esas recompensas a mitad del día.' },
-  { slug: 'mango', slugEs: 'mango', en: 'Mango', es: 'Mango', ...yellow,
+  { slug: 'mango', slugEs: 'mango', en: 'Mango', es: 'Mango', ...mango,
     descEn: 'Sun in a stick. Sweet, juicy and impossible to eat without smiling.',
     descEs: 'Sol en un palito. Dulce, jugoso e imposible de comer sin sonreír.' },
   { slug: 'chocolate', slugEs: 'chocolate', en: 'Chocolate', es: 'Chocolate', ...purple,
