@@ -28,3 +28,6 @@ assets-marca/fonts/
 
 # PDFs originales de la clienta (pesados, confidenciales)
 assets-marca/pdfs/
+
+# capturas de prueba headless en la raíz
+/*.png

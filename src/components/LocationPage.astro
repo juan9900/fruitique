@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PartnerCta from './PartnerCta.astro';
 import RetailerLogo from './RetailerLogo.astro';
 import { cities, retailers, stateNames, statesOf, type Store } from '../data/locations';
 import { localePath, useTranslations, type Locale } from '../i18n/ui';
@@ -97,6 +98,7 @@ const directions = (s: Store) => `https://www.google.com/maps/dir/?api=1&destina
       ))}
     </div>
   </section>
+  <PartnerCta locale={locale} tone="cream" />
 </BaseLayout>
 <script is:inline define:vars={{ msgs: { near: t('zip.near'), nearest: t('zip.nearest'), invalid: t('zip.invalid'), found: t('zip.found'), none: t('zip.none') }, states: Object.fromEntries(Object.entries(stateNames).map(([k, v]) => [k, [v.en, v.es]])) }}>
   (function () {

@@ -36,7 +36,7 @@ export const home = {
       items: (n: number, states: string, chains: string, flavorNames: string, count: number) => [
         { q: 'Where can I buy Fruitique?', a: `Fruitique is in ${n} locations across ${states}, including ${chains}. Type your ZIP code or city in the locator and we show you the closest ones.` },
         { q: 'Which flavors are there?', a: `${count} flavors: ${flavorNames}. Each one has its own page.` },
-        { q: 'How does Fruitique come?', a: 'In four formats: Popsicles, SquareBars, Pints and Ice Cream Sandwiches.' },
+        { q: 'How does Fruitique come?', a: 'In four formats: SquareBars (also in a 3-pack), Pints, Ice Cream Sandwiches and Filled Popsicles.' },
         { q: 'Is it handmade and natural?', a: 'That is the whole idea. Natural flavors, handmade moments and cravings you cannot say no to. Handmade Happiness :)' },
         { q: 'How do I find the closest location?', a: 'Enter your ZIP code or city, or tap “Use my location”. We highlight the closest one and show all of them on a map.' },
         { q: 'My store is not on the list. What now?', a: 'Tell us on the Contact page and we will look into it.' },
@@ -71,7 +71,7 @@ export const home = {
       items: (n: number, states: string, chains: string, flavorNames: string, count: number) => [
         { q: '¿Dónde puedo comprar Fruitique?', a: `Fruitique está en ${n} ubicaciones en ${states}, entre ellas ${chains}. Escribe tu código postal o ciudad en el localizador y te mostramos las más cercanas.` },
         { q: '¿Qué sabores hay?', a: `${count} sabores: ${flavorNames}. Cada uno tiene su propia página.` },
-        { q: '¿En qué formatos viene?', a: 'En cuatro formatos: Paletas, SquareBars, Pints y Sándwiches de Helado.' },
+        { q: '¿En qué formatos viene?', a: 'En cuatro formatos: SquareBars (también en caja de 3), Pints, Sándwiches de Helado y Paletas Rellenas.' },
         { q: '¿Es artesanal y natural?', a: 'Esa es toda la idea. Sabores naturales, momentos artesanales y antojos a los que no se les dice que no. Felicidad hecha a mano :)' },
         { q: '¿Cómo encuentro la ubicación más cercana?', a: 'Escribe tu código postal o ciudad, o toca “Usar mi ubicación”. Destacamos la más cercana y te mostramos todas en un mapa.' },
         { q: 'Mi tienda no aparece en la lista. ¿Qué hago?', a: 'Cuéntanoslo en la página de Contacto y lo revisamos.' },
@@ -138,3 +138,15 @@ export const stageThemes: Record<string, { bg: string; ink: string; text: string
 
 /** Cierre del escenario ("and many more"): morado/blanco; el texto pequeño y el botón en blanco (AA sobre morado). */
 export const stageMoreTheme = { bg: 'var(--fq-purple)', ink: 'var(--fq-white)', text: 'var(--fq-white)', pop: 'var(--fq-cream)', accent: 'var(--fq-yellow)' };
+
+/** Franja "Become a Partner" (PartnerCta.astro). Borrador, 2026-10-21. */
+export const partnerCta = {
+  en: {
+    title: 'Want Fruitique in your store?',
+    text: 'We place the freezer at no cost and you only invest in the ice cream. Grocery stores, convenience stores, pharmacies, restaurants and hotels across Florida.',
+  },
+  es: {
+    title: '¿Quieres Fruitique en tu tienda?',
+    text: 'Ponemos el congelador sin costo y tú solo inviertes en el helado. Supermercados, tiendas de conveniencia, farmacias, restaurantes y hoteles en toda Florida.',
+  },
+} as const;

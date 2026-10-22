@@ -41,6 +41,7 @@ mm.add(
     journey();
     faqAccordion();
     whereSections();
+    freezerReveal();
     countUp();
     closingBand(fine);
   },
@@ -73,6 +74,7 @@ function heroIntro(fine: boolean) {
 /* Abanico: círculo → envase central → laterales se abren → sonrisa. Estado final = CSS. */
 function heroFan(hero: HTMLElement, fine: boolean) {
   const fans = $('.visual .fan', hero);
+  const bars = $('.visual .bar', hero);
   const base = [-14, 14];
   const reach = (hero.querySelector('.visual') as HTMLElement).offsetWidth * 0.24;
   // Un solo gesto: todo arranca a la vez y los envases suben y se abren en la misma curva.
@@ -81,6 +83,8 @@ function heroFan(hero: HTMLElement, fine: boolean) {
   gsap.set('.hero .visual .fan', { yPercent: 35, opacity: 0 });
   gsap.set('.hero .visual .f1', { x: reach, rotate: 0 });
   gsap.set('.hero .visual .f3', { x: -reach, rotate: 0 });
+  // Los square bars entran desde abajo, sin tocar su rotación de CSS.
+  gsap.set('.hero .visual .bar', { yPercent: 55, opacity: 0 });
   gsap.set('.hero .visual .smile', { scale: 0.4, opacity: 0, rotate: -20, transformOrigin: '50% 50%' });
   const tl = gsap.timeline({
     delay: 0.15,
@@ -88,6 +92,7 @@ function heroFan(hero: HTMLElement, fine: boolean) {
     // Ya cargado: flotación suave de los envases y la boca se mece (finita, no bucle infinito).
     onComplete: () => {
       fans.forEach((el, i) => gsap.to(el, { y: -(8 + i * 2), duration: 2.2 + i * 0.35, ease: 'sine.inOut', yoyo: true, repeat: 5, delay: i * 0.25 }));
+      bars.forEach((el, i) => gsap.to(el, { y: -(5 + i * 2), duration: 2.6 + i * 0.3, ease: 'sine.inOut', yoyo: true, repeat: 5, delay: 0.4 + i * 0.3 }));
       gsap.to('.hero .visual .smile', { rotate: 4, scaleX: 1.05, scaleY: 1.08, duration: 2.1, ease: 'sine.inOut', yoyo: true, repeat: 5 });
     },
   });
@@ -95,6 +100,7 @@ function heroFan(hero: HTMLElement, fine: boolean) {
   tl.to('.hero .visual .fan', { yPercent: 0, opacity: 1 }, 0);
   tl.to('.hero .visual .f1', { x: 0, rotate: base[0] }, 0);
   tl.to('.hero .visual .f3', { x: 0, rotate: base[1] }, 0);
+  tl.to('.hero .visual .bar', { yPercent: 0, opacity: 1, duration: 0.95, stagger: 0.08 }, 0.18);
   tl.to('.hero .visual .smile', { scale: 1, opacity: 1, rotate: 0, duration: 0.9 }, 0.08);
 
   // El puntero abre o cierra un poco el abanico (solo escritorio).
@@ -345,6 +351,54 @@ function countUp() {
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
       onUpdate: () => { el.textContent = fmt.format(o.v); },
     });
+  });
+}
+
+/* ───────────── Congeladores (Become a Partner): la ficha de color crece y cada congelador aterriza sobre ella ───────────── */
+function freezerReveal() {
+  // El congelador del hero es lo primero que se ve: entra al cargar, sin esperar scroll.
+  const heroUnit = $('[data-freezer-hero]')[0];
+  if (heroUnit) {
+    gsap.from(heroUnit, { yPercent: 14, scale: 0.9, opacity: 0, transformOrigin: '50% 100%', duration: 1.4, ease: 'back.out(1.3)', delay: 0.35 });
+  }
+
+  const groups = $('[data-freezers]');
+  if (!groups.length) return;
+
+  // Estado inicial desde JS: sin movimiento (o sin JS) la sección ya se ve completa.
+  groups.forEach((group) => {
+    gsap.set($('[data-freezer-pad]', group), { scaleY: 0, opacity: 0, transformOrigin: '50% 100%' });
+    $('[data-freezer-unit]', group).forEach((u) => {
+      // En la franja los laterales llegan desde su lado; el central y los del escaparate suben del suelo.
+      const from = u.dataset.freezerFrom;
+      gsap.set(u, {
+        opacity: 0,
+        xPercent: from === 'left' ? -26 : from === 'right' ? 26 : 0,
+        yPercent: from === 'left' || from === 'right' ? 6 : 16,
+        scale: 0.88,
+        transformOrigin: '50% 100%',
+      });
+    });
+    gsap.set($('[data-freezer-copy]', group), { opacity: 0, y: 22 });
+  });
+
+  // En batch: los tres congeladores del escaparate entran escalonados cuando van en fila,
+  // y cada uno a su turno cuando la rejilla cae a una columna (móvil).
+  ScrollTrigger.batch(groups, {
+    start: 'top 82%',
+    once: true,
+    onEnter: (batch) => {
+      const tl = gsap.timeline();
+      batch.forEach((group, i) => {
+        const at = i * 0.16;
+        const pads = $('[data-freezer-pad]', group);
+        const units = $('[data-freezer-unit]', group);
+        const copy = $('[data-freezer-copy]', group);
+        if (pads.length) tl.to(pads, { scaleY: 1, opacity: 1, duration: 0.65, ease: 'power3.out', stagger: 0.12 }, at);
+        tl.to(units, { opacity: 1, xPercent: 0, yPercent: 0, scale: 1, duration: 1.15, ease: 'back.out(1.5)', stagger: 0.14 }, at + 0.22);
+        if (copy.length) tl.to(copy, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.06 }, at + 0.5);
+      });
+    },
   });
 }
 

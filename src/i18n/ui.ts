@@ -11,6 +11,7 @@ export const routes = {
   flavors: { en: '/flavors/', es: '/sabores/' },
   whereToBuy: { en: '/where-to-buy/', es: '/donde-comprar/' },
   story: { en: '/our-story/', es: '/nuestra-historia/' },
+  partner: { en: '/become-a-partner/', es: '/conviertete-en-socio/' },
   contact: { en: '/contact/', es: '/contacto/' },
 } as const;
 export type RouteKey = keyof typeof routes;
@@ -19,14 +20,16 @@ export const ui = {
   en: {
     'site.title': 'Fruitique — Handmade Happiness :)',
     'site.description':
-      'Natural, handmade popsicles, square bars, pints and ice cream sandwiches. Find the closest Fruitique location near you.',
+      'Natural, handmade square bars, pints, ice cream sandwiches and filled popsicles. Find the closest Fruitique location near you.',
     'nav.products': 'Products',
     'nav.flavors': 'Flavors',
     'nav.whereToBuy': 'Where to Buy',
     'nav.story': 'About Us',
+    'nav.partner': 'Become a Partner',
     'nav.contact': 'Contact',
     'nav.menu': 'Menu',
     'cta.find': 'Find Fruitique near you',
+    'cta.partner': 'Become a partner',
     'hero.title': 'Handmade happiness, one craving at a time.',
     'hero.text':
       'Natural flavors, handmade moments, irresistible cravings. Pick your flavor and find it at a location near you.',
@@ -39,7 +42,7 @@ export const ui = {
     'flavors.title': 'Pick your craving.',
     'flavors.lead': 'Fourteen natural, handmade flavors. Choose yours and find it near you.',
     'products.title': 'Made for every craving.',
-    'products.lead': 'Popsicles, SquareBars, Pints and Ice Cream Sandwiches: different ways to say the same thing, handmade happiness.',
+    'products.lead': 'SquareBars, Pints, Ice Cream Sandwiches and Filled Popsicles: different ways to say the same thing, handmade happiness.',
     'detail.moreFlavors': 'More flavors',
     'detail.moreProducts': 'More ways to enjoy',
     'detail.allFlavors': 'See all flavors',
@@ -83,14 +86,16 @@ export const ui = {
   es: {
     'site.title': 'Fruitique — Handmade Happiness :)',
     'site.description':
-      'Paletas, square bars, pints y sándwiches de helado artesanales y naturales. Encuentra la ubicación de Fruitique más cercana a ti.',
+      'Square bars, pints, sándwiches de helado y paletas rellenas, artesanales y naturales. Encuentra la ubicación de Fruitique más cercana a ti.',
     'nav.products': 'Productos',
     'nav.flavors': 'Sabores',
     'nav.whereToBuy': 'Dónde Comprar',
     'nav.story': 'Nuestra Historia',
+    'nav.partner': 'Conviértete en Socio',
     'nav.contact': 'Contacto',
     'nav.menu': 'Menú',
     'cta.find': 'Encuentra Fruitique cerca de ti',
+    'cta.partner': 'Conviértete en socio',
     'hero.title': 'Felicidad hecha a mano, un antojo a la vez.',
     'hero.text':
       'Sabores naturales, momentos artesanales, antojos irresistibles. Elige tu sabor y encuéntralo en una ubicación cerca de ti.',
@@ -103,7 +108,7 @@ export const ui = {
     'flavors.title': 'Elige tu antojo.',
     'flavors.lead': 'Catorce sabores naturales y artesanales. Escoge el tuyo y encuéntralo cerca de ti.',
     'products.title': 'Hechos para cada antojo.',
-    'products.lead': 'Paletas, SquareBars, Pints y Sándwiches de Helado: distintas formas de decir lo mismo, felicidad hecha a mano.',
+    'products.lead': 'SquareBars, Pints, Sándwiches de Helado y Paletas Rellenas: distintas formas de decir lo mismo, felicidad hecha a mano.',
     'detail.moreFlavors': 'Más sabores',
     'detail.moreProducts': 'Más formas de disfrutarlo',
     'detail.allFlavors': 'Ver todos los sabores',

@@ -6,6 +6,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://fruitiqueicecream.com',
   trailingSlash: 'always',
+  // La línea de paletas non-dairy salió del catálogo (2026-10-21); su URL apunta a las paletas rellenas.
+  redirects: {
+    '/products/popsicles/': '/products/filled-popsicles/',
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],

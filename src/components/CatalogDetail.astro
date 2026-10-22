@@ -32,7 +32,7 @@ const more = list.filter((x) => x !== item).slice(0, isFlavor ? 4 : 3);
 // ── Solo sabores: líneas donde viene, momento foto, CTA y más sabores ──
 const lines = isFlavor ? linesOfFlavor(item.slug).map((l) => {
   const pm = productMedia[l.product.slug];
-  const img = l.product.kind === 'pint' && media.lidCut ? media.pack : l.product.kind === 'squarebar' && media.cup ? media.cup : pm?.pack;
+  const img = media.byLine?.[l.product.kind] ?? (l.product.kind === 'pint' && media.lidCut ? media.pack : l.product.kind === 'squarebar' && media.cup ? media.cup : pm?.pack);
   return { name: l.label ?? l.product[locale], size: l.product.size, notes: locale === 'en' ? l.product.notesEn : l.product.notesEs, kind: l.product.kind, bg: l.product.bg, ink: l.product.ink, img, href: `${localePath('products', locale)}${productSlug(l.product, locale)}/` };
 }) : [];
 const linesTitle = locale === 'en' ? `Find ${name} as` : `Encuentra ${name} en`;
@@ -59,12 +59,13 @@ const lineFlavors = isFlavor ? [] : item.flavors.map((f: { slug: string; label?:
   return { ...fl, name: f.label ?? fl[locale], href: `${localePath('flavors', locale)}${flavorSlug(fl, locale)}/`, art: item.kind };
 });
 const lineNotes: string = isFlavor ? '' : (locale === 'en' ? item.notesEn : item.notesEs);
+const linePackNote: string = isFlavor ? '' : ((locale === 'en' ? item.packNoteEn : item.packNoteEs) ?? '');
 const lineup = isFlavor ? [] : (media.packs ?? (media.pack ? [media.pack] : [])).slice(0, 4);
 const moreLines = isFlavor ? [] : more.map((x: any) => ({ ...x, name: x[locale], href: url(x, locale), art: x.kind }));
 const flavorsTitle = locale === 'en' ? `${name} flavors` : `Sabores de ${name}`;
 
 const metaTitle = isFlavor
-  ? (locale === 'en' ? `Fruitique ${name} — natural handmade popsicle` : `Fruitique de ${name} — paleta artesanal natural`)
+  ? (locale === 'en' ? `Fruitique ${name} — natural handmade ice cream` : `Fruitique de ${name} — helado artesanal natural`)
   : (locale === 'en' ? `Fruitique ${name} — handmade ice cream` : `Fruitique ${name} — helado artesanal`);
 const metaDesc = `${desc} ${t('cta.find')}.`;
 
@@ -184,7 +185,14 @@ const crumbs = {
           <div class="facts__txt" data-reveal>
             <p class="facts__size">{item.size}</p>
             <p class="facts__notes">{lineNotes}</p>
+            {linePackNote && <p class="facts__notes">{linePackNote}</p>}
           </div>
+          {/* si la línea tiene fotos, el lineup de empaques va aparte: si no, los formatos no se verían */}
+          {media.photos.length > 0 && lineup.length > 0 && (
+            <div class="lineup lineup--extra">
+              {lineup.map((m) => <Image src={m} alt="" widths={[240, 400]} sizes="(min-width: 52rem) 12rem, 40vw" data-reveal />)}
+            </div>
+          )}
         </div>
       </section>
     </>
@@ -276,4 +284,5 @@ const crumbs = {
   .lineup :global(img) { flex: 1 1 0; min-width: 0; height: auto; margin-inline: -.2rem; filter: drop-shadow(0 16px 10px rgb(0 0 0 / .22)); }
   .lineup :global(img:nth-child(odd)) { rotate: -3deg; }
   .lineup :global(img:nth-child(even)) { rotate: 3deg; }
+  .lineup--extra { grid-column: 1 / -1; max-width: 44rem; margin-top: .5rem; }
 </style>

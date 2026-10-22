@@ -1,18 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
-import { heroPacks, mediaOf, productMedia, journeyPhotos } from '../data/media';
+import { heroPacks, heroBars, mediaOf, stagePackOf, productMedia, journeyPhotos } from '../data/media';
 import { featured, flavorSlug } from '../data/flavors';
 import { products, productSlug } from '../data/products';
 import { retailers } from '../data/locations';
 import { home, homeFacts, bitSlots, bitKinds, stageThemes, stageMoreTheme } from '../data/home';
 import Journey from './Journey.astro';
 import Where from './Where.astro';
+import PartnerCta from './PartnerCta.astro';
 import { localePath, useTranslations, type Locale } from '../i18n/ui';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-// Cierre del escenario: otras formas de Fruitique (pint de Piña Colada, SquareBars, sándwich), en abanico.
+// Cierre del escenario: otras formas de Fruitique (pint de Piña Colada, caja de 3 SquareBars, sándwich), en abanico.
 const moreArt = [productMedia.pints.packs![0], productMedia['square-bars'].pack!, productMedia['ice-cream-sandwiches'].pack!];
 const h = home[locale];
 const facts = homeFacts(locale);
@@ -42,6 +43,8 @@ const faqLd = {
         <Image src={heroPacks[0]} alt="" class="fan f1" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
         <Image src={heroPacks[2]} alt="" class="fan f3" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
         <Image src={heroPacks[1]} alt="" class="fan f2" widths={[240, 420]} sizes="(min-width: 52rem) 14rem, 40vw" loading="eager" />
+        <span class="bar b1" aria-hidden="true"><Image src={heroBars[0]} alt="" widths={[200, 360]} sizes="(min-width: 52rem) 8rem, 24vw" loading="eager" /></span>
+        <span class="bar b2" aria-hidden="true"><Image src={heroBars[1]} alt="" widths={[200, 360]} sizes="(min-width: 52rem) 8rem, 24vw" loading="eager" /></span>
       </div>
     </div>
   </section>
@@ -73,8 +76,8 @@ const faqLd = {
             const cut = (m.lidCut ?? 0.18) * 100;
             return (
               <div class="stage__pint" data-cut={cut} style={`--cut:${cut}%`}>
-                <Image class="stage__tub" src={m.pack!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
-                <Image class="stage__lid" src={m.pack!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
+                <Image class="stage__tub" src={stagePackOf(f.slug)!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
+                <Image class="stage__lid" src={stagePackOf(f.slug)!} alt="" widths={[360, 560, 800]} sizes="(min-width: 52rem) 26rem, 80vw" />
               </div>
             );
           })}
@@ -121,14 +124,16 @@ const faqLd = {
     </div>
     <div class="lines__grid">
         {products.map((p) => (
-          <article class={`line line--${p.kind}`} style={`--bg:${p.bg};--ink:${p.ink}`}>
+          /* Filled Popsicles va en rojo solo aquí: en /products/ la banda sigue siendo crema
+             (pedido de la clienta 2026-10-21), pero en la tira de tarjetas una sin color rompe el ritmo. */
+          <article class={`line line--${p.kind}`} style={p.kind === 'popsicle' ? '--bg:var(--fq-red);--ink:var(--fq-white)' : `--bg:${p.bg};--ink:${p.ink}`}>
             <div class="line__art">
               <Image src={productMedia[p.slug].pack!} alt="" widths={[360, 600, 900]} sizes="(min-width: 62rem) 20rem, 80vw" />
             </div>
             <div class="line__copy">
               <h3>{p[locale]}</h3>
               <p>{locale === 'en' ? p.descEn : p.descEs}</p>
-              <a class={`btn ${p.kind === 'popsicle' ? 'btn--yellow' : p.kind === 'squarebar' ? 'btn--red' : 'btn--white'}`} href={`${localePath('products', locale)}${productSlug(p, locale)}/`}>{h.products.see(p.short?.[locale] ?? p[locale])}</a>
+              <a class={`btn ${p.kind === 'squarebar' ? 'btn--red' : 'btn--white'}`} href={`${localePath('products', locale)}${productSlug(p, locale)}/`}>{h.products.see(p.short?.[locale] ?? p[locale])}</a>
             </div>
           </article>
         ))}
@@ -138,6 +143,8 @@ const faqLd = {
   <Journey locale={locale} />
 
   <Where locale={locale} />
+
+  <PartnerCta locale={locale} tone="turquoise" />
 
   <section class="faq" aria-labelledby="faq-title">
     <div class="container faq__in">
@@ -173,9 +180,11 @@ const faqLd = {
     .lead { font-size: 1.05rem; opacity: .92; }
     .visual { width: min(100%, 23rem); margin-inline: auto; }
     /* helados más grandes dentro del círculo (el abanico se abre un poco más hacia los lados) */
-    .visual :global(.fan) { width: 54%; left: 23%; bottom: 14%; }
-    .visual :global(.f1) { left: -2%; }
-    .visual :global(.f3) { left: 48%; }
+    .visual :global(.fan) { width: 48%; left: 26%; bottom: 22%; }
+    .visual :global(.f1) { left: 1%; }
+    .visual :global(.f3) { left: 51%; }
+    .visual .b1 { width: 27%; left: 2%; bottom: 4%; }
+    .visual .b2 { width: 22%; right: 4%; bottom: 9%; }
   }
   .finder { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
   .finder input { flex: 1 1 14rem; padding: .8rem 1.2rem; border-radius: var(--radius-pill); border: 2px solid var(--fq-red); font: 400 1rem var(--font-body); color: var(--fq-ink); background: var(--fq-white); }
@@ -183,10 +192,18 @@ const faqLd = {
 
   /* Abanico de envases con la sonrisa del ícono */
   .disc { position: absolute; inset: 4%; border-radius: 50%; background: var(--fq-yellow); }
-  .visual :global(.fan) { position: absolute; width: 46.2%; height: auto; left: 26.9%; bottom: 16%; transform-origin: 50% 100%; filter: drop-shadow(0 18px 12px rgb(0 0 0 / .25)); }
-  .visual :global(.f1) { left: 3.2%; transform: rotate(-14deg); }
-  .visual :global(.f3) { left: 50.6%; transform: rotate(14deg); }
+  .visual :global(.fan) { position: absolute; width: 41%; height: auto; left: 29.5%; bottom: 17%; transform-origin: 50% 100%; filter: drop-shadow(0 18px 12px rgb(0 0 0 / .25)); }
+  .visual :global(.f1) { left: 7.5%; transform: rotate(-14deg); }
+  .visual :global(.f3) { left: 51.5%; transform: rotate(14deg); }
   .visual :global(.f2) { z-index: 2; }
+  /* Square bars sueltos, delante del abanico y separados entre sí. */
+  /* El volteo va en la imagen y el giro en el envoltorio: así GSAP anima el envoltorio
+     sin tener que descomponer una matriz con reflexión. */
+  .visual .bar { position: absolute; display: block; z-index: 3; transform-origin: 50% 100%; filter: drop-shadow(0 12px 10px rgb(0 0 0 / .28)); }
+  .visual .bar :global(img) { display: block; width: 100%; height: auto; }
+  /* poses distintas a propósito: no son la misma paleta espejada */
+  .visual .b1 { width: 22%; left: 6%; bottom: 5%; transform: rotate(-17deg); }
+  .visual .b2 { width: 19%; right: 9%; bottom: 8%; transform: rotate(11deg); }
   /* con movimiento, el JS lo muestra justo al empezar (evita ver el estado final antes de animar) */
   :global(.motion-ok) .visual > :global(*) { visibility: hidden; }
   .smile { position: absolute; width: 36%; left: 32%; top: 22%; color: var(--fq-red); overflow: visible; }
@@ -271,7 +288,8 @@ const faqLd = {
   .line__art { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; height: 15rem; margin-bottom: 1.5rem; }
   .line__art :global(img) { width: auto; max-width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 18px 12px rgb(0 0 0 / .25)); transition: translate .5s cubic-bezier(.34, 1.56, .64, 1), rotate .5s cubic-bezier(.34, 1.56, .64, 1), scale .5s cubic-bezier(.34, 1.56, .64, 1); }
   /* empaques anchos y bajos: se ven completos en vez de limitarse por la altura */
-  .line--squarebar .line__art :global(img), .line--sandwich .line__art :global(img) { width: 100%; height: auto; max-height: 100%; }
+  .line--sandwich .line__art :global(img) { width: 100%; height: auto; max-height: 100%; }
+  /* SquareBars usa la regla general: la imagen es vertical y llena el alto de la tarjeta */
   /* el hover usa las propiedades individuales (translate/rotate/scale) para no pelear con el transform de GSAP */
   .line:hover .line__art :global(img), .line:focus-within .line__art :global(img) { translate: 0 -.6rem; rotate: -3deg; scale: 1.04; }
   .line h3 { font-size: clamp(1.9rem, 2.6vw, 2.6rem); margin: 0 0 .4rem; }
@@ -284,7 +302,7 @@ const faqLd = {
   @media (min-width: 52rem) { .faq__in { grid-template-columns: 1fr 1.6fr; align-items: start; } }
   .faq h2 { font-size: clamp(2rem, 5vw, 3.4rem); color: var(--fq-red); max-width: 12ch; }
   .faq details { border-bottom: 2px solid color-mix(in srgb, var(--fq-red) 35%, transparent); overflow: hidden; }
-  .faq summary { list-style: none; cursor: pointer; padding: 1.1rem 2.5rem 1.1rem 0; font: 700 1.2rem/1.3 var(--font-body); position: relative; }
+  .faq summary { list-style: none; cursor: pointer; padding: 1.1rem 2.5rem 1.1rem 0; font: 700 1.3rem/1.3 var(--font-display); position: relative; }
   .faq summary::-webkit-details-marker { display: none; }
   .faq summary::after { content: '+'; position: absolute; right: 0; top: 50%; translate: 0 -50%; font-size: 1.8rem; color: var(--fq-red); transition: rotate .35s cubic-bezier(.34, 1.56, .64, 1); }
   .faq details[open] summary::after, .faq details.is-open summary::after { rotate: 135deg; }

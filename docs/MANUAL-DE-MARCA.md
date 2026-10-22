@@ -55,7 +55,9 @@ Reglas:
 |---|---|---|---|
 | Display / titulares | **Como** | Regular, Bold (hay ExtraLight→Heavy) | H1/H2, claims |
 | Acento de producto | **Rude Slab** | Book, Bold, itálicas | Nombres de sabor ("Straw*berry*", "Natural *flavors*"), detalles |
-| Texto / UI | **Poppins** | Regular, Medium, SemiBold, Bold | Párrafos, botones, nav, formularios |
+| Texto / UI | **Poppins** | Regular, Medium, SemiBold, Bold | Párrafos, botones, formularios |
+
+- **Como también en**: links del navbar y preguntas de las FAQ (2026-10-21, pedido de la clienta).
 
 - Archivos en `assets-marca/fonts/` (Como Type, Rude Slab, Poppins).
 - Poppins es libre (SIL OFL); **Como y Rude Slab son comerciales: confirmar licencia web** antes de ponerlas en `public/`. Mientras tanto, fallback Poppins/`system-ui`.
@@ -66,6 +68,7 @@ Reglas:
 - Versiones: horizontal, vertical, solo ícono; color, en blanco sobre rojo, amarillo/outline sobre turquesa.
 - Descriptor: *Handmade Happiness.*
 - Sub-marcas por formato, cada una con su ícono: **SquareBars**, **Popsicles**, **Pint** (+ Natural / Premium).
+- **Nav del sitio (2026-10-21)**: los links de navegación van en **Como** (la tipografía de marca), no en Poppins — pedido de la clienta. El archivo real del wordmark sigue pendiente.
 - Reglas: usar siempre el archivo oficial (**pedir SVG/AI a la clienta**); nunca reescribir el logo con texto; respetar espacio libre; sin deformar ni recolorear fuera de las versiones aprobadas. Marca registrada ® en materiales formales.
 
 ## 7. Iconografía
@@ -97,7 +100,7 @@ Sabores (12): Coconut, Tamarindo, Passion Fruit, Cheese & Guava, Guanábana, Mam
 Color de empaque observado: Strawberry → rojo · Passion Fruit → amarillo · Guanábana → turquesa · Tamarindo → marrón · Coconut → blanco/turquesa claro. Los demás: tomar de las fotos de producto cuando la clienta las entregue.
 Los nombres de sabor se escriben en Rude Slab con una parte en itálica.
 
-**Actualización 2026-10-14 (brochure de la clienta, ver `INFO-COMERCIAL.md`)**: las líneas vigentes son Square Bars 4 oz, Special Pints 14 oz, Non Dairy Popsicles 2.5 oz e Ice Cream Sandwich 2.5 oz, con sabores por línea. Tagline en uso: "Handmade Happiness". Sellos funcionales reales: Non-GMO, Gluten Free, Dairy Free (según línea).
+**Actualización 2026-10-21**: las líneas vigentes son **Square Bars** en dos presentaciones — barra suelta de 4 oz y caja de 3 de 12 oz (coco, mango y fresa) —, **Pints 14 oz**, **Ice Cream Sandwich 2.5 oz** y **Filled Popsicles 3 oz** (rellenas de leche condensada: fresa y maracuyá). Color de banda por línea: SquareBars amarillo, Pints turquesa, Sandwiches morado y Filled Popsicles **crema** (con tinta oscura: el rojo sobre crema da 3,74:1 y no pasa AA en texto normal). Non Dairy Popsicles salió del catálogo (antes el brochure 2026-10-14 la incluía; ver `INFO-COMERCIAL.md`). Tagline en uso: "Handmade Happiness". Sellos funcionales reales: Non-GMO, Gluten Free, Dairy Free (según línea).
 
 ## 11. Aplicación a la web
 - **Header**: logo + nav (Productos | Sabores | Dónde Comprar | Nuestra Historia | Contacto) + EN/ES + botón amarillo "Find Fruitique near you".

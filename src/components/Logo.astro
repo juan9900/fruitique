@@ -1,0 +1,25 @@
+---
+/**
+ * Logo oficial de Fruitique, vectorizado del archivo de la clienta
+ * (`src/assets/brand/fruitique-logo-source.png`); ver `docs/ASSETS.md`.
+ * Nunca sustituir por texto.
+ *  - `onRed`: para el header y el footer (fondo rojo): cuerpo en blanco,
+ *    sonrisa calada y hoja + corazón en turquesa.
+ *  - `color`: versión original roja y turquesa, para fondos claros.
+ */
+interface Props { variant?: 'onRed' | 'color'; class?: string; eager?: boolean }
+const { variant = 'onRed', class: cls, eager = false } = Astro.props;
+const src = variant === 'onRed' ? '/brand/fruitique-logo-white.svg' : '/brand/fruitique-logo.svg';
+---
+<img
+  class:list={['fq-logo', cls]}
+  src={src}
+  alt="Fruitique — Artisan Ice Cream"
+  width="1290"
+  height="305"
+  decoding="async"
+  loading={eager ? 'eager' : 'lazy'}
+/>
+<style>
+  .fq-logo { display: block; width: auto; height: var(--logo-h, 2.2rem); }
+</style>

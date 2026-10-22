@@ -14,23 +14,24 @@ Sensación: moderna, colorida, tropical, premium, muy visual, centrada en produc
 - Dónde comprar: ciudad/ZIP → lista + mapa → "Cómo llegar".
 
 ## 3. Mapa del sitio
-Navegación: **Productos | Sabores | Dónde Comprar | Nuestra Historia | Contacto** (+ selector EN/ES + CTA).
+Navegación: **Productos | Sabores | Dónde Comprar | Nuestra Historia | Become a Partner | Contacto** (+ selector EN/ES + CTA). «Become a Partner» lo pidió la clienta el 2026-10-21 y se mantiene en inglés también en ES (es el mercado estadounidense); la página en español se titula «Conviértete en Socio».
 
 | EN | ES |
 |---|---|
 | `/` | `/es/` |
-| `/products/` · `/products/popsicles/` · `/products/square-bars/` · `/products/pints/` | `/es/productos/` · `/es/productos/paletas/` · `/es/productos/square-bars/` · `/es/productos/pints/` |
+| `/products/` · `/products/square-bars/` · `/products/pints/` · `/products/ice-cream-sandwiches/` · `/products/filled-popsicles/` | `/es/productos/` · `/es/productos/square-bars/` · `/es/productos/pints/` · `/es/productos/sandwiches-de-helado/` · `/es/productos/paletas-rellenas/` |
 | `/flavors/` · `/flavors/coconut/` · `/flavors/mango/` … | `/es/sabores/` · `/es/sabores/coco/` · `/es/sabores/mango/` … |
 | `/where-to-buy/` (localizador) | `/es/donde-comprar/` |
 | `/where-to-buy/cvs/` (por cadena) | `/es/donde-comprar/cvs/` |
 | `/where-to-buy/miami-fl/`, `/orlando-fl/`, `/tampa-fl/` … (por ciudad) | `/es/donde-comprar/miami-fl/` … |
 | `/our-story/` | `/es/nuestra-historia/` |
+| `/become-a-partner/` (captación de comercios) | `/es/conviertete-en-socio/` |
 | `/contact/` | `/es/contacto/` |
 
 `hreflang` entre cada par, sitemap con ambos idiomas.
 
 ## 4. Catálogo (fuente: PDF 04 Brand Architecture)
-- Líneas: **SquareBars**, **Popsicles** (paletas), **Pints** (versiones *Natural* y *Premium*).
+- Líneas (2026-10-21): **SquareBars** (también en caja de 3: coco, mango y fresa), **Pints**, **Ice Cream Sandwiches** y **Filled Popsicles** (paletas rellenas de leche condensada). La línea Non Dairy Popsicles salió del catálogo; `/products/popsicles/` redirige a `/products/filled-popsicles/`.
 - 12 sabores: Coconut, Tamarindo, Passion Fruit, Cheese & Guava, Guanábana, Mamey, Strawberry, Dulce de Leche, Mango, Chocolate, Vanilla, Blackberry.
 - **Actualización 2026-10-14**: el brochure de la clienta define 4 líneas y los sabores de cada una; ver `INFO-COMERCIAL.md` (esa lista manda sobre esta). Pendiente: si siguen Tamarindo y Blackberry, y si se agregan las líneas nuevas.
 - **Pendiente con la clienta**: cuáles se venden en Walmart, nombres/slug finales.
@@ -55,10 +56,11 @@ Actualización 2026-10-14: el mapa de la clienta trae 162 tiendas Walmart y ya e
 
 Ojo: las keywords de abajo salen del brief (incluye "Fruitique Walmart"). Los datos del sitio viejo no tienen Walmart; no usar "Walmart" en contenido ni SEO hasta que la clienta confirme que se vende ahí y entregue esas ubicaciones.
 Que Google conecte **Fruitique + Productos + Sabores + Comercios + Ubicaciones**.
-- Keywords objetivo: *Fruitique near me, Fruitique Walmart, coconut popsicles near me, mango popsicles, popsicles near me, where to buy Fruitique* y equivalentes en ES (*paletas de coco cerca de mí, paletas de mango, paletas cerca de mí, dónde comprar Fruitique, Fruitique Walmart*).
+- Keywords de la página de socios: *sell Fruitique in my store, ice cream freezer program Florida, free freezer placement ice cream, ice cream wholesale Florida, become an ice cream retailer*.
+- Keywords objetivo: *Fruitique near me, Fruitique Walmart, coconut ice cream bars near me, mango ice cream bars, filled popsicles, popsicles near me, where to buy Fruitique* y equivalentes en ES (*paletas de coco cerca de mí, paletas de mango, paletas cerca de mí, dónde comprar Fruitique, Fruitique Walmart*).
 - Por página: title/meta/H1 únicos, copy útil (no duplicado), enlaces internos sabor ↔ producto ↔ tiendas/ciudad.
 - Páginas de ciudad con contenido real (tiendas de esa ciudad, sabores disponibles, FAQ), no plantillas vacías; solo se generan para ciudades con tiendas.
-- Schema.org: `Organization`, `Brand`, `Product`, `Store`/`LocalBusiness` (ciudad/retailer), `BreadcrumbList`, `FAQPage`.
+- Schema.org: `Organization`, `Brand`, `Product`, `Store`/`LocalBusiness` (ciudad/retailer), `BreadcrumbList`, `FAQPage`, `Service` (programa de socios).
 - Técnico: sitemap, robots, canonical, `hreflang`, Open Graph, Core Web Vitals, imágenes AVIF/WebP con tamaños.
 - Google Business Profile / listados: recomendación aparte para la clienta.
 

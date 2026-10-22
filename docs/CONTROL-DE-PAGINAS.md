@@ -4,7 +4,7 @@ Lista de todas las páginas del sitio para llevar la revisión una por una. Cada
 
 Marca `[x]` cuando una página esté lista. Notas al lado si queda algo pendiente.
 
-*Última actualización: 2026-10-14. Total: 8 páginas únicas + 15 de producto/sabor + 65 de ubicaciones, cada una en EN y ES.*
+*Última actualización: 2026-10-21. Total: 9 páginas únicas + 18 de producto/sabor + 65 de ubicaciones. Hoy solo se construye inglés (119 páginas).*
 
 ## Páginas principales
 - [ ] **Home** — `/` · `/es/` *(en revisión: escenario del pint, líneas de producto, ubicaciones y FAQ añadidos)*
@@ -12,12 +12,14 @@ Marca `[x]` cuando una página esté lista. Notas al lado si queda algo pendient
 - [ ] **Sabores (índice)** — `/flavors/` · `/es/sabores/`
 - [ ] **Dónde comprar (localizador)** — `/where-to-buy/` · `/es/donde-comprar/`
 - [ ] **Nuestra Historia** — `/our-story/` · `/es/nuestra-historia/`
+- [ ] **Become a Partner** — `/become-a-partner/` · `/es/conviertete-en-socio/` *(nueva 2026-10-21: congelador en comodato, tipos de negocio, 3 congeladores, logos de clientes y formulario comercial)*
 - [ ] **Contacto** — `/contact/` · `/es/contacto/`
 
-## Productos (3) — `/products/[slug]/` · `/es/productos/[slug]/`
-- [ ] Popsicles / Paletas — `popsicles` · `paletas`
-- [ ] SquareBars — `square-bars` · `square-bars`
+## Productos (4) — `/products/[slug]/` · `/es/productos/[slug]/`
+- [ ] SquareBars (incluye el 3 Pack) — `square-bars` · `square-bars`
 - [ ] Pints — `pints` · `pints`
+- [ ] Ice Cream Sandwiches — `ice-cream-sandwiches` · `sandwiches-de-helado`
+- [ ] Filled Popsicles / Paletas Rellenas — `filled-popsicles` · `paletas-rellenas`
 
 ## Sabores (12) — `/flavors/[slug]/` · `/es/sabores/[slug]/`
 Con imagen real:

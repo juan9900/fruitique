@@ -1,0 +1,57 @@
+---
+/**
+ * Franja que invita a los comercios a vender Fruitique. Se usa en la home, el localizador
+ * y las páginas de ciudad/cadena. Ojo: no darle la clase `.band`, que `closingBand()` solo
+ * anima la primera del documento.
+ * Los tres congeladores van superpuestos sobre un mismo suelo y a escala real entre sí
+ * (la altura sale de las pulgadas de `partner.freezers`, igual que el escaparate de la página).
+ */
+import { Image } from 'astro:assets';
+import { freezers } from '../data/media';
+import { partnerCta } from '../data/home';
+import { partner } from '../data/pages';
+import { localePath, useTranslations, type Locale } from '../i18n/ui';
+interface Props { locale: Locale; tone?: 'cream' | 'turquoise' }
+const { locale, tone = 'cream' } = Astro.props;
+const t = useTranslations(locale);
+const c = partnerCta[locale];
+const units = partner[locale].freezers;
+const tallest = Math.max(...units.map((f) => f.inches));
+const k = (i: number) => `${Math.round((units[i].inches / tallest) * 100)}%`;
+---
+<section class={`partner-strip partner-strip--${tone}`}>
+  <div class="container inner">
+    <div class="copy">
+      <h2 data-reveal>{c.title}</h2>
+      <p data-reveal>{c.text}</p>
+      <a class="btn btn--red" href={localePath('partner', locale)} data-reveal>{t('cta.partner')}</a>
+    </div>
+    <div class="lineup" data-freezers>
+      <span class="lineup__floor" aria-hidden="true" data-freezer-pad></span>
+      <Image class="unit unit--tall" src={freezers[0]} alt={units[0].name} style={`--k:${k(0)}`} widths={[240, 420, 620]} sizes="(min-width: 60rem) 16rem, 36vw" data-freezer-unit data-freezer-from="center" />
+      <Image class="unit unit--left" src={freezers[1]} alt={units[1].name} style={`--k:${k(1)}`} widths={[220, 380, 560]} sizes="(min-width: 60rem) 15rem, 34vw" data-freezer-unit data-freezer-from="left" />
+      <Image class="unit unit--right" src={freezers[2]} alt={units[2].name} style={`--k:${k(2)}`} widths={[180, 300, 440]} sizes="(min-width: 60rem) 12rem, 28vw" data-freezer-unit data-freezer-from="right" />
+    </div>
+  </div>
+</section>
+<style>
+  .partner-strip { padding-block: clamp(3rem, 7vw, 5.5rem); overflow: clip; }
+  .partner-strip--cream { background: var(--fq-cream); color: var(--fq-ink); --pad: var(--fq-turquoise); }
+  .partner-strip--turquoise { background: var(--fq-turquoise); color: var(--fq-ink); --pad: var(--fq-yellow); }
+
+  .inner { display: grid; gap: clamp(2rem, 5vw, 3.5rem); align-items: center; }
+  @media (min-width: 60rem) { .inner { grid-template-columns: 1fr 1.05fr; } }
+
+  h2 { font-size: clamp(2.1rem, 5.5vw, 3.6rem); margin: 0 0 .4em; max-width: 15ch; }
+  p { margin: 0 0 1.6rem; max-width: 36rem; font-size: clamp(1.02rem, 1.4vw, 1.15rem); }
+
+  /* Los tres sobre un mismo suelo: el vertical detrás y al centro, los bunkers delante. */
+  .lineup { position: relative; aspect-ratio: 7 / 5; }
+  .lineup__floor { position: absolute; inset: 26% 3% 6%; background: var(--pad); border-radius: 1.75rem; }
+  .lineup :global(.unit) { position: absolute; bottom: 6%; height: calc(var(--k) * .92); width: auto; max-width: none; object-fit: contain; object-position: bottom; filter: drop-shadow(0 1rem 1rem rgb(42 10 11 / .28)); }
+  /* Centrado con márgenes automáticos, no con translate: GSAP absorbe la propiedad `translate`
+     al animar y resolvía el -50% contra un ancho aún sin cargar (quedaba descentrado en móvil). */
+  .unit--tall { left: 0; right: 0; margin-inline: auto; z-index: 1; }
+  .unit--left { left: 0; z-index: 2; }
+  .unit--right { right: 0; z-index: 2; }
+</style>

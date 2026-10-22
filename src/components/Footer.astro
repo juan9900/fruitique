@@ -1,4 +1,5 @@
 ---
+import Logo from './Logo.astro';
 import { alternatePath, ES_ENABLED, localePath, useTranslations, type Locale } from '../i18n/ui';
 interface Props { locale: Locale; switchHref?: string }
 const { locale, switchHref } = Astro.props;
@@ -8,7 +9,7 @@ const other: Locale = locale === 'en' ? 'es' : 'en';
 <footer class="site-footer">
   <div class="container inner">
     <div>
-      <p class="brand">fruitique</p>
+      <a class="brand" href={localePath('home', locale)} aria-label="Fruitique"><Logo variant="onRed" /></a>
       <p class="tag">{t('footer.tagline')}</p>
     </div>
     <nav aria-label="Footer">
@@ -16,6 +17,7 @@ const other: Locale = locale === 'en' ? 'es' : 'en';
       <a href={localePath('flavors', locale)}>{t('nav.flavors')}</a>
       <a href={localePath('whereToBuy', locale)}>{t('nav.whereToBuy')}</a>
       <a href={localePath('story', locale)}>{t('nav.story')}</a>
+      <a href={localePath('partner', locale)}>{t('nav.partner')}</a>
       <a href={localePath('contact', locale)}>{t('nav.contact')}</a>
       {ES_ENABLED && <a href={switchHref ?? alternatePath(Astro.url, other)} hreflang={other} lang={other}>{t('lang.switch')}</a>}
     </nav>
@@ -25,7 +27,7 @@ const other: Locale = locale === 'en' ? 'es' : 'en';
 <style>
   .site-footer { background: var(--fq-red); color: var(--fq-white); padding-block: 2.5rem 1.5rem; }
   .inner { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; }
-  .brand { font: 800 2rem var(--font-display); margin: 0; }
+  .brand { display: inline-flex; --logo-h: 2.6rem; margin-bottom: .6rem; }
   .tag { margin: 0; color: var(--fq-yellow); font-weight: 700; }
   nav { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; align-items: flex-start; }
   nav a { text-decoration: none; font-weight: 600; }

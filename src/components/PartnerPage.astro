@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { partner, salesContact } from '../data/pages';
+import { clientLogos } from '../data/client-logos';
+import { freezers } from '../data/media';
+import { stores, statesOf } from '../data/locations';
+import { localePath, type Locale } from '../i18n/ui';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = partner[locale];
+const coverage = c.coverage(stores.length.toLocaleString(locale === 'es' ? 'es-US' : 'en-US'), statesOf(stores).length);
+const colors = ['var(--fq-turquoise)', 'var(--fq-yellow)', 'var(--fq-purple)'];
+const inks = ['var(--fq-ink)', 'var(--fq-red)', 'var(--fq-white)'];
+/** El cuerpo no va en rojo sobre amarillo (contraste bajo): solo el título. */
+const bodyInks = ['var(--fq-ink)', 'var(--fq-ink)', 'var(--fq-white)'];
+const tallest = Math.max(...c.freezers.map((f) => f.inches));
+const url = new URL(localePath('partner', locale), Astro.site).href;
+const crumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fruitique', item: new URL(localePath('home', locale), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: c.title, item: url },
+  ],
+};
+const service = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: locale === 'es' ? 'Programa de socios comerciales Fruitique' : 'Fruitique retail partner program',
+  serviceType: locale === 'es' ? 'Distribución mayorista de helado artesanal' : 'Artisan ice cream wholesale distribution',
+  description: c.metaDesc,
+  url,
+  areaServed: { '@type': 'State', name: 'Florida' },
+  provider: { '@type': 'Organization', name: 'Fruitique', url: new URL('/', Astro.site).href },
+  audience: { '@type': 'BusinessAudience', name: locale === 'es' ? 'Comercios minoristas y foodservice' : 'Retail and foodservice businesses' },
+};
+---
+<BaseLayout
+  locale={locale}
+  title={`${c.title} — Fruitique`}
+  description={c.metaDesc}
+  alternates={{ en: localePath('partner', 'en'), es: localePath('partner', 'es') } as Record<Locale, string>}
+  jsonLd={[crumbs, service]}
+>
+  <section class="intro partner-hero">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <h1 data-split>{c.h1a}<br /><em>{c.h1b}</em></h1>
+        <p class="lead">{c.lead}</p>
+        <p class="sub">{c.sub}</p>
+        <a class="btn btn--yellow" href="#partner-form">{c.cta}</a>
+      </div>
+      <Image class="hero-photo" src={freezers[0]} alt={c.freezers[0].name} widths={[400, 700, 1100]} sizes="(min-width: 62rem) 32rem, 70vw" loading="eager" data-freezer-hero />
+    </div>
+  </section>
+
+  <section class="benefits">
+    <div class="container">
+      <h2 data-reveal>{c.benefitsTitle}</h2>
+      <div class="benefits__grid">
+        {c.benefits.map((b, i) => (
+          <article class="benefit" style={`--bg:${colors[i]}; --ink:${inks[i]}; --ink-body:${bodyInks[i]}`} data-reveal>
+            <h3>{b.t}</h3>
+            <p>{b.d}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="who">
+    <div class="container who__grid">
+      <div>
+        <h2 data-reveal>{c.whoTitle}</h2>
+        <p class="lead" data-reveal>{c.whoLead}</p>
+        <ul class="who__list" data-reveal>{c.who.map((w) => <li>{w}</li>)}</ul>
+      </div>
+      <div>
+        <h2 data-reveal>{c.whyTitle}</h2>
+        <ul class="why__list" data-reveal>{c.why.map((w) => <li>{w}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="freezers">
+    <div class="container">
+      <h2 data-reveal>{c.freezersTitle}</h2>
+      <p class="lead" data-reveal>{c.freezersLead}</p>
+      <div class="showroom">
+        {c.freezers.map((f, i) => (
+          <article class="fz" style={`--bg:${colors[i]}; --k:${Math.round((f.inches / tallest) * 100)}%`} data-freezers>
+            <div class="fz__stage">
+              <span class="fz__pad" aria-hidden="true" data-freezer-pad></span>
+              <Image class="fz__img" src={freezers[i]} alt={f.name} widths={[300, 500, 800]} sizes="(min-width: 62rem) 20rem, 70vw" data-freezer-unit />
+            </div>
+            <h3 data-freezer-copy>{f.name}</h3>
+            <p class="fz__pitch" data-freezer-copy>{f.pitch}</p>
+            <dl class="fz__dims" data-freezer-copy>
+              <div><dt>{c.dimLabels.w}</dt><dd>{f.w}</dd></div>
+              <div><dt>{c.dimLabels.d}</dt><dd>{f.d}</dd></div>
+              <div><dt>{c.dimLabels.h}</dt><dd>{f.h}</dd></div>
+            </dl>
+            <ul data-freezer-copy>{f.features.map((x) => <li>{x}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <p class="note">{c.scaleNote} {c.freezersNote}</p>
+    </div>
+  </section>
+
+  <section class="trusted">
+    <div class="container">
+      <h2 data-reveal>{c.trustedTitle}</h2>
+      <p class="lead" data-reveal>{c.trustedLead}</p>
+      <ul class="logos" data-reveal>
+        {clientLogos.map((l) => (
+          <li class={l.wide ? 'is-wide' : undefined}><img src={l.src} alt={l.name} loading="lazy" decoding="async" /></li>
+        ))}
+      </ul>
+      <p class="coverage"><strong>{coverage}</strong></p>
+    </div>
+  </section>
+
+  <section class="form-sec" id="partner-form">
+    <div class="container">
+      <h2 data-reveal>{c.formTitle}</h2>
+      <p class="lead">{c.formLead}</p>
+      <!-- El destinatario del correo se configura en Netlify (Forms → Notifications). -->
+      <form id="partner-form-el" name="partner" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-ok={c.f.ok} data-error={c.f.error} data-sending={c.f.sending}>
+        <input type="hidden" name="form-name" value="partner" />
+        <input type="hidden" name="locale" value={locale} />
+        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <label>{c.f.business}<input name="business" type="text" required autocomplete="organization" /></label>
+        <label>{c.f.name}<input name="name" type="text" required autocomplete="name" /></label>
+        <div class="row">
+          <label>{c.f.email}<input name="email" type="email" required autocomplete="email" /></label>
+          <label>{c.f.phone}<input name="phone" type="tel" required autocomplete="tel" /></label>
+        </div>
+        <div class="row">
+          <label>{c.f.city}<input name="city" type="text" required autocomplete="address-level2" /></label>
+          <label>{c.f.zip}<input name="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" required autocomplete="postal-code" /></label>
+        </div>
+        <label>{c.f.type}
+          <select name="business_type" required>
+            {c.f.types.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </label>
+        <label>{c.f.message}<textarea name="message" rows="4"></textarea></label>
+        <button class="btn btn--yellow" type="submit">{c.f.send}</button>
+        <p id="partner-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="direct">{c.f.or} <a href={`mailto:${salesContact.email}`}>{salesContact.email}</a> · <a href={`tel:${salesContact.phoneHref}`}>{salesContact.phone}</a></p>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('partner-form-el') as HTMLFormElement | null;
+    const status = document.getElementById('partner-status');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button') as HTMLButtonElement;
+      btn.disabled = true;
+      if (status) status.textContent = form.dataset.sending ?? '';
+      try {
+        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        if (status) status.textContent = form.dataset.ok ?? '';
+      } catch {
+        if (status) status.textContent = form.dataset.error ?? '';
+      }
+      btn.disabled = false;
+    });
+  </script>
+</BaseLayout>
+<style>
+  section { padding-block: clamp(3rem, 8vw, 6rem); }
+  h2 { font-size: clamp(2rem, 5vw, 3.4rem); margin: 0 0 .6em; }
+  .lead { font-size: 1.15rem; max-width: 40rem; }
+
+  /* Hero */
+  .partner-hero { background: var(--fq-red); color: var(--fq-white); padding-block: clamp(3rem, 9vw, 7rem); overflow: clip; }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  .partner-hero h1 { font-size: clamp(2.6rem, 7.5vw, 5.4rem); margin: 0 0 .4em; max-width: 14ch; }
+  .partner-hero h1 em { font-style: normal; color: var(--fq-yellow); }
+  .partner-hero .lead { font-size: clamp(1.1rem, 2vw, 1.35rem); margin: 0 0 1rem; }
+  .partner-hero .sub { max-width: 38rem; margin: 0 0 2rem; opacity: .9; }
+  .hero-grid :global(.hero-photo) { width: min(78vw, 30rem); height: auto; justify-self: center; filter: drop-shadow(0 1.5rem 2rem rgb(0 0 0 / .3)); }
+  @media (min-width: 62rem) { .hero-grid { grid-template-columns: 1.15fr .85fr; gap: 4rem; } }
+
+  /* Beneficios */
+  .benefits { background: var(--fq-cream); }
+  .benefits__grid { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+  .benefit { background: var(--bg); color: var(--ink); border-radius: 1.6rem; padding: clamp(1.6rem, 3vw, 2.4rem); }
+  .benefit h3 { font: italic 700 clamp(1.6rem, 3vw, 2.3rem)/1.05 var(--font-accent); margin: 0 0 .5em; }
+  .benefit p { margin: 0; font-size: 1.02rem; color: var(--ink-body); }
+
+  /* Quién / por qué */
+  .who { background: var(--fq-white); }
+  .who__grid { display: grid; gap: clamp(2rem, 5vw, 4rem); }
+  .who h2 { color: var(--fq-red); }
+  .who ul { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: .7rem; max-width: 34rem; }
+  .who li { padding-left: 1.6rem; position: relative; }
+  .who li::before { content: ''; position: absolute; left: 0; top: .55em; width: .6rem; height: .6rem; border-radius: 50%; background: var(--fq-turquoise); }
+  .why__list li::before { background: var(--fq-yellow); }
+  @media (min-width: 62rem) { .who__grid { grid-template-columns: 1fr 1fr; } }
+
+  /* Congeladores */
+  .freezers { background: var(--fq-cream); }
+  .freezers h2 { color: var(--fq-red); }
+  .showroom { display: grid; gap: clamp(2.5rem, 4vw, 3rem); grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); margin-top: clamp(2.5rem, 5vw, 4rem); align-items: start; }
+  /* Los tres congeladores van a escala real entre sí: la altura de la foto sale de las pulgadas (--k). */
+  .fz__stage { position: relative; height: clamp(17rem, 30vw, 24rem); display: flex; align-items: flex-end; justify-content: center; }
+  /* Todas las fichas de color son iguales y comparten el suelo: lo que cambia es el alto real de cada congelador. */
+  .fz__pad { position: absolute; inset: 45% 0 0; background: var(--bg); border-radius: 2rem; }
+  .fz :global(.fz__img) { position: relative; height: var(--k); width: auto; max-width: 88%; object-fit: contain; object-position: bottom; filter: drop-shadow(0 1.2rem 1.2rem rgb(42 10 11 / .3)); }
+  .fz h3 { font: italic 700 clamp(1.5rem, 2.6vw, 2.1rem)/1.05 var(--font-accent); color: var(--fq-red); margin: 1.4rem 0 .35rem; }
+  .fz__pitch { margin: 0 0 1.1rem; font-size: 1.02rem; max-width: 24ch; }
+  @media (min-width: 62rem) { .fz h3 { min-height: 2.1em; } .fz__pitch { min-height: 3.2em; } }
+  .fz__dims { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0 clamp(1rem, 2.5vw, 2rem); margin: 0 0 1.2rem; padding-top: .9rem; border-top: 2px solid rgb(42 10 11 / .18); }
+  .fz__dims dt { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .65; }
+  .fz__dims dd { margin: .1rem 0 0; font: 800 clamp(1.1rem, 2vw, 1.45rem) var(--font-display); color: var(--fq-red); }
+  .fz ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem; font-size: .96rem; }
+  .fz li::marker { color: var(--fq-turquoise); }
+  .freezers .note { margin-top: clamp(2rem, 4vw, 3rem); font-size: .9rem; opacity: .7; }
+
+  /* Clientes */
+  .trusted { background: var(--fq-turquoise); color: var(--fq-ink); }
+  .logos { list-style: none; margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); align-items: center; }
+  .logos li { background: var(--fq-white); border-radius: .8rem; padding: 1rem; display: flex; align-items: center; justify-content: center; min-height: 5rem; }
+  .logos img { max-height: 2.6rem; max-width: 100%; width: auto; object-fit: contain; }
+  .logos .is-wide img { max-height: 1.9rem; }
+  .coverage { margin-top: 2rem; font: 700 clamp(1.2rem, 3vw, 1.8rem) var(--font-display); }
+
+  /* Formulario */
+  .form-sec { background: var(--fq-red); color: var(--fq-white); scroll-margin-top: 5rem; }
+  .form-sec .lead { margin-bottom: 2rem; }
+  form { display: grid; gap: 1.1rem; max-width: 40rem; }
+  .row { display: grid; gap: 1.1rem; }
+  @media (min-width: 40rem) { .row { grid-template-columns: 1fr 1fr; } }
+  label { display: grid; gap: .35rem; font-weight: 600; }
+  input, textarea, select { padding: .85rem 1.1rem; border-radius: .9rem; border: 2px solid transparent; background: var(--fq-white); font: 400 1rem var(--font-body); color: var(--fq-ink); width: 100%; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--fq-yellow); border-color: var(--fq-ink); }
+  .hp { position: absolute; left: -9999px; }
+  button { justify-self: start; }
+  #partner-status { min-height: 1.5rem; margin: 0; font-weight: 600; }
+  .direct { margin-top: 1.8rem; font-weight: 600; }
+  .direct a { color: var(--fq-yellow); }
+</style>

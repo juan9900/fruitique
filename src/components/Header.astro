@@ -1,22 +1,23 @@
 ---
+import Logo from './Logo.astro';
 import { alternatePath, ES_ENABLED, localePath, useTranslations, type Locale, type RouteKey } from '../i18n/ui';
 interface Props { locale: Locale; switchHref?: string }
 const { locale, switchHref } = Astro.props;
 const t = useTranslations(locale);
 const other: Locale = locale === 'en' ? 'es' : 'en';
-const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereToBuy' | 'nav.story' | 'nav.contact' }[] = [
+const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereToBuy' | 'nav.story' | 'nav.partner' | 'nav.contact' }[] = [
   { key: 'products', label: 'nav.products' },
   { key: 'flavors', label: 'nav.flavors' },
   { key: 'whereToBuy', label: 'nav.whereToBuy' },
   { key: 'story', label: 'nav.story' },
+  { key: 'partner', label: 'nav.partner' },
   { key: 'contact', label: 'nav.contact' },
 ];
 ---
 <header class="site-header">
   <div class="container bar">
     <a class="logo" href={localePath('home', locale)} aria-label="Fruitique — Handmade Happiness">
-      <!-- TODO: reemplazar por el logo oficial SVG cuando la clienta lo entregue (no reescribir el logo con texto) -->
-      <span class="logo-ph">fruitique</span>
+      <Logo variant="onRed" eager />
     </a>
     <input type="checkbox" id="nav-toggle" class="nav-toggle" />
     <label for="nav-toggle" class="burger" aria-label={t('nav.menu')}><span></span></label>
@@ -35,20 +36,31 @@ const nav: { key: RouteKey; label: 'nav.products' | 'nav.flavors' | 'nav.whereTo
 <style>
   .site-header { background: var(--fq-red); color: var(--fq-white); position: sticky; top: 0; z-index: 10; }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; }
-  .logo { text-decoration: none; font: 800 1.9rem var(--font-display); letter-spacing: -.02em; }
+  .logo { display: inline-flex; --logo-h: 2.3rem; }
   .nav { display: flex; align-items: center; gap: 1.1rem; white-space: nowrap; }
-  .nav a:not(.btn) { text-decoration: none; font-weight: 600; }
+  /* Links en Como (la tipografía de marca), no en Poppins: pedido de la clienta 2026-10-21. */
+  .nav a:not(.btn) { text-decoration: none; font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: .005em; }
   .nav a:not(.btn):hover { text-decoration: underline; text-decoration-color: var(--fq-yellow); text-underline-offset: 6px; }
   .nav a.lang { display: inline-flex; align-items: center; gap: .3rem; font-size: .8rem; font-weight: 600; letter-spacing: .04em; opacity: .75; padding: .3rem .5rem; border-radius: var(--radius-pill); transition: opacity .2s, background-color .2s; }
   .nav a.lang:hover { opacity: 1; background: rgb(255 255 255 / .16); text-decoration: none; }
   .nav a.lang:focus-visible { opacity: 1; outline: 3px solid var(--fq-yellow); }
   .nav-toggle, .burger { display: none; }
-  @media (max-width: 75rem) {
+  /* iPad horizontal y portátiles: el menú entero cabe si se compacta, y así el CTA
+     "Find Fruitique near you" sigue visible en vez de esconderse en el burger. */
+  @media (min-width: 62rem) and (max-width: 84rem) {
+    .bar { gap: .75rem; }
+    .logo { --logo-h: 2rem; }
+    .nav { gap: clamp(.55rem, -1.1rem + 2.2vw, 1.1rem); }
+    .nav a:not(.btn) { font-size: clamp(.85rem, .35rem + .67vw, 1rem); }
+    .nav .btn { font-size: clamp(.85rem, .35rem + .67vw, 1rem); padding: .7rem clamp(.85rem, -.3rem + 1.5vw, 1.4rem); }
+  }
+  @media (max-width: 61.99rem) {
     .burger { display: block; cursor: pointer; padding: .75rem; }
     .burger span, .burger span::before, .burger span::after { display: block; width: 1.6rem; height: 3px; background: var(--fq-white); border-radius: 2px; position: relative; content: ''; }
     .burger span::before { position: absolute; top: -7px; } .burger span::after { position: absolute; top: 7px; }
     .nav { display: none; position: absolute; inset: 100% 0 auto 0; flex-direction: column; align-items: stretch; background: var(--fq-red); padding: 1rem var(--gutter) 1.5rem; gap: 1rem; }
     .nav-toggle:checked ~ .nav { display: flex; }
     .nav-toggle:focus-visible ~ .burger { outline: 3px solid var(--fq-yellow); }
+    .logo { --logo-h: 2rem; }
   }
 </style>
