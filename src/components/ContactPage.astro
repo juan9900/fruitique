@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { contact } from '../data/pages';
+import { formEndpoint, formSubject } from '../data/forms';
 import { localePath, type Locale } from '../i18n/ui';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -11,11 +12,13 @@ const c = contact[locale];
     <div class="container">
       <h1 data-split>{c.h1}</h1>
       <p class="lead">{c.lead}</p>
-      <!-- El destinatario del correo se configura en Netlify (Forms → Notifications). No hay contacto real aún. -->
-      <form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-ok={c.ok} data-error={c.error} data-sending={c.sending}>
-        <input type="hidden" name="form-name" value="contact" />
+      <!-- Destinatario y modo de pruebas: src/data/forms.ts -->
+      <form id="contact-form" name="contact" method="POST" action={formEndpoint} data-ok={c.ok} data-error={c.error} data-sending={c.sending}>
+        <input type="hidden" name="_subject" value={formSubject.contact} />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
         <input type="hidden" name="locale" value={locale} />
-        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="_honey" tabindex="-1" autocomplete="off" /></label></p>
         <label>{c.name}<input name="name" type="text" required autocomplete="name" /></label>
         <label>{c.email}<input name="email" type="email" required autocomplete="email" /></label>
         <label>{c.message}<textarea name="message" rows="6" required></textarea></label>
@@ -25,24 +28,8 @@ const c = contact[locale];
     </div>
   </section>
   <script>
-    const form = document.getElementById('contact-form') as HTMLFormElement | null;
-    const status = document.getElementById('contact-status');
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = form.querySelector('button') as HTMLButtonElement;
-      btn.disabled = true;
-      if (status) status.textContent = form.dataset.sending ?? '';
-      try {
-        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
-        if (!res.ok) throw new Error(String(res.status));
-        form.reset();
-        if (status) status.textContent = form.dataset.ok ?? '';
-      } catch {
-        if (status) status.textContent = form.dataset.error ?? '';
-      }
-      btn.disabled = false;
-    });
+    import { wireForm } from '../scripts/forms';
+    wireForm('contact-form', 'contact-status');
   </script>
 </BaseLayout>
 <style>

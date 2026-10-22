@@ -108,6 +108,8 @@ const lines = products.map((p) => {
   }
   .band--squarebar .art :global(.pack--1) { width: 21%; left: -4%; bottom: -6%; rotate: -16deg; }
   .band--squarebar .art :global(.pack--2) { width: 15%; right: 3%; bottom: -8%; rotate: 22deg; scale: -1 1; }
+  /* pints: los tres envases al mismo tamaño; el del centro va detrás y asomado por arriba */
+  .band--pint .art :global(.pack--0) { width: 46%; translate: 0 -12%; }
   .band--sandwich .art :global(.pack--0) { width: min(100%, 26rem); }
   .band--sandwich .art :global(.pack--1) { position: relative; width: min(80%, 20rem); left: auto; bottom: auto; rotate: 4deg; margin-top: -1rem; }
   .copy h2 { margin: 0 0 .5rem; font: 800 clamp(2.4rem, 6vw, 4.4rem)/1.05 var(--font-display); }

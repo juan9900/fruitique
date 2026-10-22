@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { Image } from 'astro:assets';
 import { partner, salesContact } from '../data/pages';
+import { formEndpoint, formSubject } from '../data/forms';
 import { clientLogos } from '../data/client-logos';
 import { freezers } from '../data/media';
 import { stores, statesOf } from '../data/locations';
@@ -126,11 +127,13 @@ const service = {
     <div class="container">
       <h2 data-reveal>{c.formTitle}</h2>
       <p class="lead">{c.formLead}</p>
-      <!-- El destinatario del correo se configura en Netlify (Forms → Notifications). -->
-      <form id="partner-form-el" name="partner" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-ok={c.f.ok} data-error={c.f.error} data-sending={c.f.sending}>
-        <input type="hidden" name="form-name" value="partner" />
+      <!-- Destinatario y modo de pruebas: src/data/forms.ts -->
+      <form id="partner-form-el" name="partner" method="POST" action={formEndpoint} data-ok={c.f.ok} data-error={c.f.error} data-sending={c.f.sending}>
+        <input type="hidden" name="_subject" value={formSubject.partner} />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
         <input type="hidden" name="locale" value={locale} />
-        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <p class="hp" aria-hidden="true"><label>Don't fill this out <input name="_honey" tabindex="-1" autocomplete="off" /></label></p>
         <label>{c.f.business}<input name="business" type="text" required autocomplete="organization" /></label>
         <label>{c.f.name}<input name="name" type="text" required autocomplete="name" /></label>
         <div class="row">
@@ -155,24 +158,8 @@ const service = {
   </section>
 
   <script>
-    const form = document.getElementById('partner-form-el') as HTMLFormElement | null;
-    const status = document.getElementById('partner-status');
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = form.querySelector('button') as HTMLButtonElement;
-      btn.disabled = true;
-      if (status) status.textContent = form.dataset.sending ?? '';
-      try {
-        const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
-        if (!res.ok) throw new Error(String(res.status));
-        form.reset();
-        if (status) status.textContent = form.dataset.ok ?? '';
-      } catch {
-        if (status) status.textContent = form.dataset.error ?? '';
-      }
-      btn.disabled = false;
-    });
+    import { wireForm } from '../scripts/forms';
+    wireForm('partner-form-el', 'partner-status');
   </script>
 </BaseLayout>
 <style>
@@ -188,6 +175,8 @@ const service = {
   .partner-hero .lead { font-size: clamp(1.1rem, 2vw, 1.35rem); margin: 0 0 1rem; }
   .partner-hero .sub { max-width: 38rem; margin: 0 0 2rem; opacity: .9; }
   .hero-grid :global(.hero-photo) { width: min(78vw, 30rem); height: auto; justify-self: center; filter: drop-shadow(0 1.5rem 2rem rgb(0 0 0 / .3)); }
+  /* en móvil el congelador del hero compite con el titular: va más chico */
+  @media (max-width: 61.99rem) { .hero-grid :global(.hero-photo) { width: min(48vw, 17rem); } }
   @media (min-width: 62rem) { .hero-grid { grid-template-columns: 1.15fr .85fr; gap: 4rem; } }
 
   /* Beneficios */
