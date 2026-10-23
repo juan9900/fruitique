@@ -1,4 +1,3 @@
-import { salesContact } from './pages';
 
 /**
  * Envío de los formularios del sitio (Contacto y Become a Partner) sin servidor.
@@ -12,17 +11,19 @@ import { salesContact } from './pages';
  * activación a ese buzón y hay que pulsar el enlace una vez. A partir de ahí
  * todos los envíos llegan solos.
  *
- * PENDIENTE (2026-10-21): el correo destino queda visible en el HTML y es
- * scrapeable. Al hablar con el cliente, activar su buzón con el primer envío y
- * sustituir el correo por el alias con hash que da FormSubmit
- * (`https://formsubmit.co/<hash>`), que oculta la dirección.
+ * El endpoint usa el alias con hash de FormSubmit (`https://formsubmit.co/<hash>`)
+ * del buzón de la clienta (activado 2026-10-22), así la dirección no queda
+ * visible ni scrapeable en el HTML.
  */
 export const FORM_TEST_MODE = false;
 
 /** Buzón de pruebas mientras FORM_TEST_MODE está activo. */
 const TEST_INBOX = 'juanluislauretta@gmail.com';
 
-export const formTo = FORM_TEST_MODE ? TEST_INBOX : salesContact.email;
+/** Alias con hash del buzón de la clienta (oculta la dirección real). */
+const FORM_HASH = 'f0ce45068945be034729406d12efa28d';
+
+export const formTo = FORM_TEST_MODE ? TEST_INBOX : FORM_HASH;
 
 /** Endpoint normal: sin JS el POST funciona igual y FormSubmit muestra su página de gracias. */
 export const formEndpoint = `https://formsubmit.co/${formTo}`;
