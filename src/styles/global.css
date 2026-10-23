@@ -28,6 +28,7 @@ a { color: inherit; }
   transition: transform .15s ease;
 }
 .btn:hover { transform: translateY(-2px) scale(1.03); }
+.btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }  /* mientras se envía un formulario */
 .btn--yellow { background: var(--fq-yellow); color: var(--fq-red); }  /* CTA principal sobre rojo */
 .btn--white { background: var(--fq-white); color: var(--fq-red); }
 .btn--red { background: var(--fq-red); color: var(--fq-white); }
